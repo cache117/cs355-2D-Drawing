@@ -43,9 +43,12 @@ public class DrawingViewer implements ViewRefresher
         List<Shape> shapes = model.getShapesReversed();
 
         DrawableShape drawableShape = new DrawableNullShape();
+        DrawableShape selectedShape = new DrawableNullShape();
         for (Shape shape : shapes)
         {
             drawableShape = DrawableShapeFactory.createDrawableShape(shape);
+            if (shape.isSelected())
+                selectedShape = drawableShape;
             try
             {
                 drawableShape.draw(graphics2D);
@@ -54,6 +57,8 @@ public class DrawingViewer implements ViewRefresher
                 LOGGER.log(Level.SEVERE, "Failed to create Drawable Shape for " + shape.toString(), e);
             }
         }
+        selectedShape.drawOutline(graphics2D);
+
 
         //draw on graphics2D
         //refresh the view with graphics2D

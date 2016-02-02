@@ -59,4 +59,44 @@ public class ShapeUtilities
             symmetricPoint = new Point2D.Double(draggedX, startY - xDistance);
         return symmetricPoint;
     }
+
+    private static double getLowerXBoundOfBox(double centerX, double width)
+    {
+        return centerX - (width / 2.0);
+    }
+
+    private static double getUpperXBoundOfBox(double centerX, double width)
+    {
+        return centerX + (width / 2.0);
+    }
+
+    private static double getLowerYBoundOfBox(double centerY, double height)
+    {
+        return centerY - (height / 2.0);
+    }
+
+    private static double getUpperYBoundOfBox(double centerY, double height)
+    {
+        return centerY + (height / 2.0);
+    }
+
+    public static boolean pointInBoundingBox(Point2D.Double point, Point2D.Double center, double width, double height)
+    {
+        double lowerXBound = getLowerXBoundOfBox(center.x, width);
+        double upperXBound = getUpperXBoundOfBox(center.x, width);
+        double lowerYBound = getLowerYBoundOfBox(center.y, height);
+        double upperYBound = getUpperYBoundOfBox(center.y, height);
+        return ((point.x >= lowerXBound && point.x <= upperXBound) && (point.y >= lowerYBound && point.y <= upperYBound));
+    }
+
+    public static boolean pointInBoundingCircle(Point2D.Double point, Point2D.Double center, double radius)
+    {
+        double distance = Point2D.distance(point.x, point.y, center.x, center.y);
+        return distance <= radius;
+    }
+
+    public static boolean pointInEllipse(Point2D.Double point, Point2D.Double center, double xRadius, double yRadius)
+    {
+        return (Math.pow(((point.x - center.x) / xRadius), 2) + Math.pow(((point.y - center.y) / yRadius), 2) <= 1);
+    }
 }

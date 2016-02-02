@@ -26,7 +26,7 @@ public class DrawableTriangle extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics, boolean selected)
+    public void drawShape(Graphics2D graphics)
     {
         graphics.fillPolygon(getXPoints(), getYPoints(), getExpectedPoints());
     }
@@ -50,6 +50,12 @@ public class DrawableTriangle extends DrawableShape
     public Shape getModelShape()
     {
         return new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
+    }
+
+    @Override
+    public void drawOutline(Graphics2D graphics2D)
+    {
+
     }
 
     public void addPoint(Point2D.Double point, CS355Drawing model)

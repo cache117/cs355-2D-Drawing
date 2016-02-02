@@ -43,10 +43,10 @@ public abstract class DrawableShape
     public void draw(Graphics2D graphics) throws InvalidPointsException
     {
         graphics.setColor(getColor());
-        this.drawShape(graphics, shape.isSelected());
+        this.drawShape(graphics);
     }
 
-    protected abstract void drawShape(Graphics2D graphics, boolean selected);
+    protected abstract void drawShape(Graphics2D graphics);
 
     /**
      * Sets the beginning and end points from the given shape.
@@ -147,4 +147,6 @@ public abstract class DrawableShape
     {
         return shape;
     }
+
+    public abstract void drawOutline(Graphics2D graphics2D);
 }

@@ -1,7 +1,6 @@
 package cs355.view.drawing;
 
 import cs355.GUIFunctions;
-import cs355.model.drawing.*;
 import cs355.model.drawing.Rectangle;
 import cs355.model.drawing.Shape;
 
@@ -30,12 +29,19 @@ public class DrawableRectangle extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics, boolean selected)
+    public void drawShape(Graphics2D graphics)
     {
         Point2D.Double upperLeft = calculateUpperLeftPoint();
         graphics.fillRect((int) upperLeft.getX(), (int) upperLeft.getY(), (int) getWidth(), (int) getHeight());
-        if (selected)
-            graphics.drawRect((int) upperLeft.getX() - 1, (int) upperLeft.getY() - 1, (int) getWidth() + 1, (int) getHeight() + 1);
+    }
+
+    @Override
+    public void drawOutline(Graphics2D graphics2D)
+    {
+        Point2D.Double upperLeft = calculateUpperLeftPoint();
+        graphics2D.setColor(Color.RED);
+        graphics2D.drawRect((int) upperLeft.getX() - 2, (int) upperLeft.getY() - 2, (int) getWidth() + 2, (int) getHeight() + 2);
+        //Add rotation handle
     }
 
     protected Point2D.Double calculateUpperLeftPoint()
@@ -126,4 +132,5 @@ public class DrawableRectangle extends DrawableShape
     {
         return new Rectangle(getColor(), calculateCenterFromUpperLeft(), getWidth(), getHeight());
     }
+
 }

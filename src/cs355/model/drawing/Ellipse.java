@@ -1,5 +1,7 @@
 package cs355.model.drawing;
 
+import cs355.view.drawing.ShapeUtilities;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
@@ -76,18 +78,44 @@ public class Ellipse extends Shape
     }
 
     /**
-     * Add your code to do an intersection test
-     * here. You shouldn't need the tolerance.
+     * Add your code to do an intersection test here. You shouldn't need the tolerance.
      *
-     * @param pt        = the point to test against.
-     * @param tolerance = the allowable tolerance.
-     * @return true if pt is in the shape,
-     * false otherwise.
+     * @param worldPoint = the point to test against.
+     * @param tolerance  = the allowable tolerance.
+     * @return true if pt is in the shape, false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double pt, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (rotation == 0)
+        {
+            if (ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), width, height))
+            {
+                if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius()))
+                    return ShapeUtilities.pointInEllipse(worldPoint, getCenter(), width / 2, height / 2);
+                else
+                    return false;
+            } else
+                return false;
+        } else
+        {
+            if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius()))
+            {
+                Point2D.Double objectPoint = getObjectCoordinatePoint(worldPoint);
+                return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
+            } else
+                return false;
+        }
+    }
+
+    /**
+     * Gets the larger of the two radii
+     *
+     * @return the larger of the two radii
+     */
+    private double getLargerRadius()
+    {
+        return (height < width) ? width : height;
     }
 
 }

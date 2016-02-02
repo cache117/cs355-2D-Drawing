@@ -29,7 +29,7 @@ public class DrawableEllipse extends DrawableRectangle
     }
 
     @Override
-    public void drawShape(Graphics2D graphics, boolean selected)
+    public void drawShape(Graphics2D graphics)
     {
         Point2D.Double upperLeftPoint = calculateUpperLeftPoint();
         graphics.fillOval((int) upperLeftPoint.x, (int) upperLeftPoint.y, (int) getWidth(), (int) getHeight());

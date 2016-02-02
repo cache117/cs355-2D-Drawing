@@ -1,7 +1,6 @@
 package cs355.view.drawing;
 
 import cs355.GUIFunctions;
-import cs355.model.drawing.CS355Drawing;
 import cs355.model.drawing.Line;
 import cs355.model.drawing.Shape;
 
@@ -25,7 +24,7 @@ public class DrawableLine extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics, boolean selected)
+    public void drawShape(Graphics2D graphics)
     {
         Point2D.Double start = getStartPoint();
         Point2D.Double end = getEndPoint();
@@ -47,5 +46,11 @@ public class DrawableLine extends DrawableShape
         Point2D.Double start = getStartPoint();
         Point2D.Double end = getEndPoint();
         return new Line(getColor(), start, end);
+    }
+
+    @Override
+    public void drawOutline(Graphics2D graphics2D)
+    {
+
     }
 }

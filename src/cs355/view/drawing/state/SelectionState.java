@@ -14,9 +14,11 @@ import java.util.List;
  */
 public class SelectionState extends DrawingState
 {
+    private boolean shapeSelected;
     public SelectionState()
     {
         super(new DrawableNullShape());
+        shapeSelected = false;
         GUIFunctions.printf("Select a shape to modify.");
     }
 
@@ -24,13 +26,14 @@ public class SelectionState extends DrawingState
     public void mouseClicked(Point2D.Double point, CS355Drawing model)
     {
         List<Shape> shapes = model.getShapes();
-        boolean shapeFound = false;
+        boolean shapeSelected = false;
         for(Shape shape: shapes)
         {
-            if (shape.pointInShape(point, shape.getTolerance()) && !shapeFound)
+            if (shape.pointInShape(point, shape.getTolerance()) && !shapeSelected)
             {
                 shape.setSelected(true);
-                shapeFound = true;
+                shapeSelected = true;
+                GUIFunctions.printf("Shape Selected");
             }
             else
                 shape.setSelected(false);

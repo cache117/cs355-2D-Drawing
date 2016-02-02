@@ -1,5 +1,7 @@
 package cs355.model.drawing;
 
+import cs355.view.drawing.ShapeUtilities;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
@@ -79,15 +81,27 @@ public class Rectangle extends Shape
      * Add your code to do an intersection test
      * here. You shouldn't need the tolerance.
      *
-     * @param pt        = the point to test against.
-     * @param tolerance = the allowable tolerance.
-     * @return true if pt is in the shape,
-     * false otherwise.
+     * @param worldPoint = the point to test against.
+     * @param tolerance  = the allowable tolerance.
+     * @return true if pt is in the shape, false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double pt, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (getRotation() == 0)
+            return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getWidth(), getHeight());
+        else
+        {
+            /*//Expanded bounding box
+            if (!ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getWidth(), getHeight()))
+            {
+                return false;
+            } else
+            {*/
+            //Check in more depth
+            return ShapeUtilities.pointInBoundingBox(getObjectCoordinatePoint(worldPoint), new Point2D.Double(0, 0), getWidth(), getHeight());
+            //}
+        }
     }
 
 }

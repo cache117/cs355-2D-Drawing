@@ -1,5 +1,7 @@
 package cs355.model.drawing;
 
+import cs355.view.drawing.ShapeUtilities;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
@@ -54,15 +56,15 @@ public class Circle extends Shape
      * Add your code to do an intersection test
      * here. You shouldn't need the tolerance.
      *
-     * @param pt        = the point to test against.
-     * @param tolerance = the allowable tolerance.
+     * @param worldPoint = the point to test against.
+     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape,
      * false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double pt, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getRadius() * 2, getRadius() * 2) && ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getRadius());
     }
 
 }

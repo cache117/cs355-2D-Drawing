@@ -11,7 +11,7 @@ import java.awt.*;
 public class DrawableNullShape extends DrawableShape
 {
     @Override
-    protected void drawShape(Graphics2D graphics, boolean selected)
+    protected void drawShape(Graphics2D graphics)
     {
 
     }
@@ -30,6 +30,12 @@ public class DrawableNullShape extends DrawableShape
 
     @Override
     public void setColor(Color color)
+    {
+
+    }
+
+    @Override
+    public void drawOutline(Graphics2D graphics2D)
     {
 
     }
