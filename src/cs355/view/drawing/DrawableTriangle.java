@@ -35,15 +35,14 @@ public class DrawableTriangle extends DrawableShape
     protected void calculatePointsFromShape(Shape shape)
     {
         Triangle triangle = (Triangle) shape;
-
+        /*
         setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), getRotation(), getCenterPoint()));
         setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), getRotation(), getCenterPoint()));
         setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), getRotation(), getCenterPoint()));
-        /*
+        */
         setStartPoint(triangle.getA());
         setMiddlePoint(triangle.getB());
         setEndPoint(triangle.getC());
-        */
     }
 
     @Override
