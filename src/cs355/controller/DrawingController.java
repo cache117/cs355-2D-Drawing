@@ -28,6 +28,7 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     {
         model = new DrawingModel();
         state = new InitialState();
+        state.setColor(Color.WHITE);
     }
 
     /* begin CS355Controller methods */
@@ -156,7 +157,7 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void doDeleteShape()
     {
-
+        state.deleteShape(getModel());
     }
 
     @Override
@@ -204,25 +205,25 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void doMoveForward()
     {
-
+        state.moveShapeForward(getModel());
     }
 
     @Override
     public void doMoveBackward()
     {
-
+        state.moveShapeBackward(model);
     }
 
     @Override
     public void doSendToFront()
     {
-
+        state.moveShapeToFront(model);
     }
 
     @Override
     public void doSendtoBack()
     {
-
+        state.moveShapeToBack(model);
     }
 
     /* end CS355Controller methods */
@@ -295,6 +296,11 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     public ViewRefresher getView()
     {
         return view;
+    }
+
+    public CS355Drawing getModel()
+    {
+        return model;
     }
 
     public void setState(DrawingState state)

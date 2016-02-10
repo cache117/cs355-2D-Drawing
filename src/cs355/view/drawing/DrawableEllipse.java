@@ -31,8 +31,8 @@ public class DrawableEllipse extends DrawableRectangle
     @Override
     public void drawShape(Graphics2D graphics)
     {
-        Point2D.Double upperLeftPoint = calculateUpperLeftPoint();
-        graphics.fillOval((int) upperLeftPoint.x, (int) upperLeftPoint.y, (int) getWidth(), (int) getHeight());
+        //Point2D.Double upperLeftPoint = calculateUpperLeftPoint();
+        graphics.fillOval((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
     }
 
     @Override
@@ -45,14 +45,17 @@ public class DrawableEllipse extends DrawableRectangle
 
     protected Point2D.Double calculateLowerRightFromCenter(Point2D.Double center, double width, double height)
     {
-        int x = (int) (center.x + (width / 2));
-        int y = (int) (center.y + (height / 2));
+        double x = (center.x + (width / 2.0));
+        double y = (center.y + (height / 2.0));
         return new Point2D.Double(x, y);
     }
 
     @Override
     public Shape getModelShape()
     {
-        return new Ellipse(getColor(), calculateCenterFromUpperLeft(), getWidth(), getHeight());
+        Ellipse ellipse = new Ellipse(getColor(), calculateCenterFromUpperLeft(), getWidth(), getHeight());
+        if (getRotation() != 0.0)
+            ellipse.setRotation(getRotation());
+        return ellipse;
     }
 }

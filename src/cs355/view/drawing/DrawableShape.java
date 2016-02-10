@@ -13,11 +13,12 @@ import cs355.model.drawing.Shape;
  */
 public abstract class DrawableShape
 {
+    public static final int HANDLE_DIAMETER = 16, HANDLE_DISTANCE_FROM_OUTLINE = 20, HANDLE_RADIUS = (HANDLE_DIAMETER / 2), HANDLE_CENTER_DISTANCE_FROM_OUTLINE = HANDLE_DISTANCE_FROM_OUTLINE - HANDLE_RADIUS;
     /* Every shape (except for Triangle) uses two points to draw, independent of how they are drawn */
     private Point2D.Double startPoint, endPoint, centerPoint;
     private Color color;
     private int numberOfActualPoints;
-    private Shape shape;
+    private double rotation;
 
     public DrawableShape()
     {
@@ -27,9 +28,9 @@ public abstract class DrawableShape
     public DrawableShape(Shape shape)
     {
         this();
-        this.shape = shape;
         this.color = shape.getColor();
         this.centerPoint = shape.getCenter();
+        this.rotation = shape.getRotation();
         this.calculatePointsFromShape(shape);
         this.setNumberOfActualPoints(getExpectedPoints());
     }
@@ -40,10 +41,11 @@ public abstract class DrawableShape
         this.color = color;
     }
 
-    public void draw(Graphics2D graphics) throws InvalidPointsException
+    public void draw(Graphics2D graphics2D) throws InvalidPointsException
     {
-        graphics.setColor(getColor());
-        this.drawShape(graphics);
+        graphics2D.setColor(getColor());
+        this.applyTransformationToGraphics(graphics2D);
+        this.drawShape(graphics2D);
     }
 
     protected abstract void drawShape(Graphics2D graphics);
@@ -102,12 +104,12 @@ public abstract class DrawableShape
         this.endPoint = endPoint;
     }
 
-    protected Point2D.Double getCenterPoint()
+    public Point2D.Double getCenterPoint()
     {
         return centerPoint;
     }
 
-    protected void setCenterPoint(Point2D.Double centerPoint)
+    public void setCenterPoint(Point2D.Double centerPoint)
     {
         this.centerPoint = centerPoint;
     }
@@ -137,16 +139,38 @@ public abstract class DrawableShape
         this.color = color;
     }
 
+    public double getRotation()
+    {
+        return rotation;
+    }
+
+    public void setRotation(double rotation)
+    {
+        this.rotation = rotation;
+    }
+
     public void updateEndPoint(Point2D.Double point, CS355Drawing model)
     {
         setEndPoint(point);
         ((DrawingModel) model).setShape(0, this.getModelShape());
     }
 
-    protected Shape getShape()
+    public void drawOutline(Graphics2D graphics2D)
     {
-        return shape;
+        graphics2D.setColor(Color.RED);
+        this.applyTransformationToGraphics(graphics2D);
+        this.drawShapeOutline(graphics2D);
+        this.drawShapeHandle(graphics2D);
     }
 
-    public abstract void drawOutline(Graphics2D graphics2D);
+    protected abstract void drawShapeHandle(Graphics2D graphics2D);
+
+    protected abstract void drawShapeOutline(Graphics2D graphics2D);
+
+    protected void applyTransformationToGraphics(Graphics2D graphics2D)
+    {
+        Transform.applyTransformationToGraphics(graphics2D, rotation, centerPoint);
+    }
+
+    public abstract Point2D.Double getHandleCenterPoint();
 }

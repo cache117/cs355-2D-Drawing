@@ -37,9 +37,15 @@ public class DrawableCircle extends DrawableEllipse
     @Override
     protected void calculatePointsFromShape(Shape shape)
     {
-        Circle circle = (Circle) getShape();
+        Circle circle = (Circle) shape;
         double diameter = 2.0 * circle.getRadius();
         setStartPoint(calculateUpperLeftFromCenter(circle.getCenter(), diameter, diameter));
         setEndPoint(calculateLowerRightFromCenter(circle.getCenter(), diameter, diameter));
+    }
+
+    @Override
+    protected void drawShapeHandle(Graphics2D graphics2D)
+    {
+
     }
 }

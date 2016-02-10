@@ -39,16 +39,18 @@ public class DrawingViewer implements ViewRefresher
     @Override
     public void refreshView(Graphics2D graphics2D)
     {
-        //Draw selection handles lastx
+        //Draw selection handles last
         List<Shape> shapes = model.getShapesReversed();
 
-        DrawableShape drawableShape = new DrawableNullShape();
         DrawableShape selectedShape = new DrawableNullShape();
         for (Shape shape : shapes)
         {
-            drawableShape = DrawableShapeFactory.createDrawableShape(shape);
+            DrawableShape drawableShape = DrawableShapeFactory.createDrawableShape(shape);
             if (shape.isSelected())
+            {
+                GUIFunctions.printf("Shape selected");
                 selectedShape = drawableShape;
+            }
             try
             {
                 drawableShape.draw(graphics2D);
@@ -57,6 +59,7 @@ public class DrawingViewer implements ViewRefresher
                 LOGGER.log(Level.SEVERE, "Failed to create Drawable Shape for " + shape.toString(), e);
             }
         }
+
         selectedShape.drawOutline(graphics2D);
 
 

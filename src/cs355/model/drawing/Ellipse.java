@@ -1,6 +1,7 @@
 package cs355.model.drawing;
 
 import cs355.view.drawing.ShapeUtilities;
+import cs355.view.drawing.Transform;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -101,7 +102,7 @@ public class Ellipse extends Shape
         {
             if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius()))
             {
-                Point2D.Double objectPoint = getObjectCoordinatePoint(worldPoint);
+                Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter());
                 return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
             } else
                 return false;
@@ -118,4 +119,36 @@ public class Ellipse extends Shape
         return (height < width) ? width : height;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Ellipse ellipse = (Ellipse) o;
+
+        if (Double.compare(ellipse.width, width) != 0)
+            return false;
+        if (Double.compare(ellipse.height, height) != 0)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(width);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(height);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

@@ -1,6 +1,7 @@
 package cs355.model.drawing;
 
 import cs355.view.drawing.ShapeUtilities;
+import cs355.view.drawing.Transform;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -67,7 +68,29 @@ public class Square extends Shape
         if (getRotation() == 0)
             return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getSize(), getSize());
         else
-            return ShapeUtilities.pointInBoundingBox(getObjectCoordinatePoint(worldPoint), new Point2D.Double(0, 0), getSize(), getSize());
+            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), new Point2D.Double(0, 0), getSize(), getSize());
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Square square = (Square) o;
+
+        return Double.compare(square.size, size) == 0;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        long temp = Double.doubleToLongBits(size);
+        return (int) (temp ^ (temp >>> 32));
+    }
 }

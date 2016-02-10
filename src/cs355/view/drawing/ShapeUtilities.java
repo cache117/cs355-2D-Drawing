@@ -80,6 +80,15 @@ public class ShapeUtilities
         return centerY + (height / 2.0);
     }
 
+    /**
+     * Checks whether or not a point is in a bounding box.
+     *
+     * @param point  the point.
+     * @param center the center of the bounding box
+     * @param width  the width of the bounding box
+     * @param height the height of the bounding box
+     * @return true if the point is in the bounding box, false otherwise.
+     */
     public static boolean pointInBoundingBox(Point2D.Double point, Point2D.Double center, double width, double height)
     {
         double lowerXBound = getLowerXBoundOfBox(center.x, width);
@@ -89,12 +98,29 @@ public class ShapeUtilities
         return ((point.x >= lowerXBound && point.x <= upperXBound) && (point.y >= lowerYBound && point.y <= upperYBound));
     }
 
+    /**
+     * Checks whether or not a point is in a bounding circle.
+     *
+     * @param point  the point.
+     * @param center the center of the bounding circle
+     * @param radius the radius of the bounding circle
+     * @return true if the point is in the bounding circle, false otherwise.
+     */
     public static boolean pointInBoundingCircle(Point2D.Double point, Point2D.Double center, double radius)
     {
         double distance = Point2D.distance(point.x, point.y, center.x, center.y);
         return distance <= radius;
     }
 
+    /**
+     * Checks whether or not a point is in an ellipse
+     *
+     * @param point   the point.
+     * @param center  the center of the ellipse
+     * @param xRadius the xRaidus of the ellipse
+     * @param yRadius the yRadius of the ellipse
+     * @return true if the point is in the ellipse, false otherwise.
+     */
     public static boolean pointInEllipse(Point2D.Double point, Point2D.Double center, double xRadius, double yRadius)
     {
         return (Math.pow(((point.x - center.x) / xRadius), 2) + Math.pow(((point.y - center.y) / yRadius), 2) <= 1);

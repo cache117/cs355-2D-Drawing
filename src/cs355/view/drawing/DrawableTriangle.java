@@ -12,7 +12,7 @@ import java.awt.geom.Point2D;
  */
 public class DrawableTriangle extends DrawableShape
 {
-    private Point2D.Double middlePoint, relativeStartPoint, relativeMiddlePoint, relativeEndPoint;
+    private Point2D.Double middlePoint;
 
     public DrawableTriangle(Shape triangle)
     {
@@ -35,9 +35,15 @@ public class DrawableTriangle extends DrawableShape
     protected void calculatePointsFromShape(Shape shape)
     {
         Triangle triangle = (Triangle) shape;
+
+        setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), getRotation(), getCenterPoint()));
+        setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), getRotation(), getCenterPoint()));
+        setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), getRotation(), getCenterPoint()));
+        /*
         setStartPoint(triangle.getA());
         setMiddlePoint(triangle.getB());
         setEndPoint(triangle.getC());
+        */
     }
 
     @Override
@@ -49,13 +55,43 @@ public class DrawableTriangle extends DrawableShape
     @Override
     public Shape getModelShape()
     {
-        return new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
+        /*
+        Triangle triangle = new Triangle(getColor(), getCenterPoint(),
+                Transform.getObjectPointFromWorldPoint(getStartPoint(), getRotation(), getCenterPoint()),
+                Transform.getObjectPointFromWorldPoint(getMiddlePoint(), getRotation(), getCenterPoint()),
+                Transform.getObjectPointFromWorldPoint(getEndPoint(), getRotation(), getCenterPoint()));
+                */
+        Triangle triangle = new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
+        if (getRotation() != 0.0)
+            triangle.setRotation(getRotation());
+        return triangle;
     }
 
     @Override
-    public void drawOutline(Graphics2D graphics2D)
+    protected void drawShapeHandle(Graphics2D graphics2D)
     {
+        double greatestDistance = getGreatestDistanceFromCenter();
+        graphics2D.drawOval(-HANDLE_DIAMETER / 2, (int) (-greatestDistance - HANDLE_DISTANCE_FROM_OUTLINE), HANDLE_DIAMETER, HANDLE_DIAMETER);
+    }
 
+    @Override
+    public void drawShapeOutline(Graphics2D graphics2D)
+    {
+        double greatestDistance = getGreatestDistanceFromCenter();
+        Point2D.Double upperLeft = new Point2D.Double(-greatestDistance, -greatestDistance);
+        graphics2D.drawRect((int) upperLeft.x, (int) upperLeft.y, (int) greatestDistance * 2, (int) greatestDistance * 2);
+    }
+
+    double getAveragePoint(double p1, double p2, double p3)
+    {
+        return (p1 + p2 + p3) / 3;
+    }
+
+    private Point2D.Double calculateCenterPoint()
+    {
+        double x = getAveragePoint(getStartPoint().x, getMiddlePoint().x, getEndPoint().x);
+        double y = getAveragePoint(getStartPoint().y, getMiddlePoint().y, getEndPoint().y);
+        return new Point2D.Double(x, y);
     }
 
     public void addPoint(Point2D.Double point, CS355Drawing model)
@@ -68,21 +104,20 @@ public class DrawableTriangle extends DrawableShape
                 setEndPoint(point);
                 setNumberOfActualPoints(1);
 
-                model.addShape(getModelShape());
                 GUIFunctions.printf("Click to set second vertex.");
                 break;
             case 1:
                 setMiddlePoint(point);
                 setNumberOfActualPoints(2);
 
-                ((DrawingModel) model).setShape(0, getModelShape());
                 GUIFunctions.printf("Click to set third vertex.");
                 break;
             case 2:
                 setEndPoint(point);
                 setNumberOfActualPoints(3);
+                setCenterPoint(calculateCenterPoint());
 
-                ((DrawingModel) model).setShape(0, getModelShape());
+                model.addShape(getModelShape());
                 this.clearPoints();
                 GUIFunctions.printf("Click to set first vertex.");
                 break;
@@ -90,7 +125,6 @@ public class DrawableTriangle extends DrawableShape
                 assert false;
         }
     }
-
 
     private Point2D.Double getMiddlePoint()
     {
@@ -118,5 +152,25 @@ public class DrawableTriangle extends DrawableShape
         yPoints[1] = (int) getMiddlePoint().y;
         yPoints[2] = (int) getEndPoint().y;
         return yPoints;
+    }
+
+    private double getGreatestDistanceFromCenter()
+    {
+        double firstDistance = Point2D.distance(getStartPoint().x, getStartPoint().y, getCenterPoint().x, getCenterPoint().y);
+        double middleDistance = Point2D.distance(getMiddlePoint().x, getMiddlePoint().y, getCenterPoint().x, getCenterPoint().y);
+        double endDistance = Point2D.distance(getEndPoint().x, getEndPoint().y, getCenterPoint().x, getCenterPoint().y);
+        return Math.max(firstDistance, Math.max(middleDistance, endDistance));
+    }
+
+    @Override
+    protected void applyTransformationToGraphics(Graphics2D graphics2D)
+    {
+
+    }
+
+    @Override
+    public Point2D.Double getHandleCenterPoint()
+    {
+        return new Point2D.Double(0, -getGreatestDistanceFromCenter() / 2 - HANDLE_DISTANCE_FROM_OUTLINE);
     }
 }

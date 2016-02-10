@@ -26,7 +26,6 @@ public class Triangle extends Shape
      */
     public Triangle(Color color, Point2D.Double center, Point2D.Double a, Point2D.Double b, Point2D.Double c)
     {
-
         // Initialize the superclass.
         super(color, center);
 
@@ -100,8 +99,8 @@ public class Triangle extends Shape
      * Add your code to do an intersection test
      * here. You shouldn't need the tolerance.
      *
-     * @param worldPoint        = the point to test against.
-     * @param tolerance = the allowable tolerance.
+     * @param worldPoint = the point to test against.
+     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape,
      * false otherwise.
      */
@@ -111,4 +110,37 @@ public class Triangle extends Shape
         return false;
     }
 
+    private double getGreatestDistanceFromCenter()
+    {
+        return 0.0;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Triangle triangle = (Triangle) o;
+
+        if (!a.equals(triangle.a))
+            return false;
+        if (!b.equals(triangle.b))
+            return false;
+        return c.equals(triangle.c);
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = a.hashCode();
+        result = 31 * result + b.hashCode();
+        result = 31 * result + c.hashCode();
+        return result;
+    }
 }

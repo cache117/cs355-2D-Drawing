@@ -27,6 +27,20 @@ public class DrawingModel extends CS355Drawing
         return new NullShape();
     }
 
+    public int getShapeIndex(Shape shape)
+    {
+        int shapeIndex = -1;
+        for (int i = 0; i <shapes.size(); ++i)
+        {
+            if (shapes.get(i).equals(shape))
+            {
+                shapeIndex = i;
+                break;
+            }
+        }
+        return shapeIndex;
+    }
+
     /**
      * Sets the shape that the given index.
      *

@@ -14,43 +14,77 @@ public abstract class DrawingState
 {
     private DrawableShape drawableShape;
 
+    private boolean shapeSelected;
+
     public DrawingState(DrawableShape shape)
     {
         this.drawableShape = shape;
     }
     public void lineButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new LineState(drawableShape.getColor()));
     }
 
     public void squareButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new SquareState(drawableShape.getColor()));
     }
 
     public void rectangleButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new RectangularState(drawableShape.getColor()));
     }
 
     public void circleButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new CircleState(drawableShape.getColor()));
     }
 
     public void ellipseButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new EllipseState(drawableShape.getColor()));
     }
 
     public void triangleButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new TriangleState(drawableShape.getColor()));
     }
 
     public void selectButtonHit(DrawingController controller)
     {
+        this.stateChanged(controller.getModel());
         controller.setState(new SelectionState());
+    }
+
+    public void deleteShape(CS355Drawing model)
+    {
+
+    }
+
+    public void moveShapeForward(CS355Drawing model)
+    {
+
+    }
+
+    public void moveShapeBackward(CS355Drawing model)
+    {
+
+    }
+
+    public void moveShapeToFront(CS355Drawing model)
+    {
+
+    }
+
+    public void moveShapeToBack(CS355Drawing model)
+    {
+
     }
 
     /**
@@ -103,5 +137,20 @@ public abstract class DrawingState
     public void setDrawableShape(DrawableShape drawableShape)
     {
         this.drawableShape = drawableShape;
+    }
+
+    public boolean isShapeSelected()
+    {
+        return shapeSelected;
+    }
+
+    public void setIsShapeSelected(boolean shapeSelected)
+    {
+        this.shapeSelected = shapeSelected;
+    }
+
+    protected void stateChanged(CS355Drawing model)
+    {
+
     }
 }

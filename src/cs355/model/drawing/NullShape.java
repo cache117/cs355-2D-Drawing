@@ -21,4 +21,10 @@ public class NullShape extends Shape
     {
         return false;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        return false;
+    }
 }

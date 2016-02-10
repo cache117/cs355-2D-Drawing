@@ -32,6 +32,15 @@ public class DrawableSquare extends DrawableRectangle
     }
 
     @Override
+    public Shape getModelShape()
+    {
+        Square square = new Square(getColor(), calculateCenterFromUpperLeft(), getWidth());
+        if (getRotation() != 0.0)
+            square.setRotation(getRotation());
+        return square;
+    }
+
+    @Override
     public void setEndPoint(Point2D.Double endPoint)
     {
         Point2D.Double symmetricEndPoint = ShapeUtilities.calculateSymmetricPoint(getStartPoint(), endPoint);

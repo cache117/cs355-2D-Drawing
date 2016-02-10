@@ -33,6 +33,7 @@ public abstract class Shape
         this.color = color;
         this.center = center;
         rotation = 0.0;
+        this.selected = false;
     }
 
     /**
@@ -119,11 +120,30 @@ public abstract class Shape
         return selected;
     }
 
-    protected Point2D.Double getObjectCoordinatePoint(Point2D.Double worldCoordinatePoint)
+    @Override
+    public boolean equals(Object o)
     {
-        AffineTransform worldToObject = new AffineTransform();
-        worldToObject.rotate(rotation, center.x, center.y);
-        Point2D.Double objectPoint = new Point2D.Double();
-        return (Point2D.Double) worldToObject.transform(worldCoordinatePoint, objectPoint);
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Shape shape = (Shape) o;
+//        if (Double.compare(shape.rotation, rotation) != 0)
+//            return false;
+        if (!color.equals(shape.color))
+            return false;
+        return center.equals(shape.center);
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result;
+        result = color.hashCode();
+        result = 31 * result + center.hashCode();
+        result = 31 * result + (selected ? 1 : 0);
+        return result;
     }
 }

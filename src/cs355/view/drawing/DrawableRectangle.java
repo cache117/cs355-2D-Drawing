@@ -1,10 +1,12 @@
 package cs355.view.drawing;
 
 import cs355.GUIFunctions;
+import cs355.model.drawing.Ellipse;
 import cs355.model.drawing.Rectangle;
 import cs355.model.drawing.Shape;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
 /**
@@ -31,27 +33,40 @@ public class DrawableRectangle extends DrawableShape
     @Override
     public void drawShape(Graphics2D graphics)
     {
+        /*
         Point2D.Double upperLeft = calculateUpperLeftPoint();
         graphics.fillRect((int) upperLeft.getX(), (int) upperLeft.getY(), (int) getWidth(), (int) getHeight());
+        */
+        graphics.fillRect((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
     }
 
     @Override
-    public void drawOutline(Graphics2D graphics2D)
+    public void drawShapeOutline(Graphics2D graphics2D)
     {
-        Point2D.Double upperLeft = calculateUpperLeftPoint();
-        graphics2D.setColor(Color.RED);
-        graphics2D.drawRect((int) upperLeft.getX() - 2, (int) upperLeft.getY() - 2, (int) getWidth() + 2, (int) getHeight() + 2);
-        //Add rotation handle
+        graphics2D.drawRect((int) (-getWidth() / 2) - 2, (int) (-getHeight() / 2) - 2, (int) getWidth() + 3, (int) getHeight() + 3);
+        GUIFunctions.printf("Drawing outline");
+    }
+
+    @Override
+    protected void drawShapeHandle(Graphics2D graphics2D)
+    {
+        graphics2D.drawOval(-HANDLE_RADIUS, (int) (-getHeight() / 2) - HANDLE_DISTANCE_FROM_OUTLINE, HANDLE_DIAMETER, HANDLE_DIAMETER);
+    }
+
+    @Override
+    public Point2D.Double getHandleCenterPoint()
+    {
+        return new Point2D.Double(0, (-getHeight() / 2) - HANDLE_CENTER_DISTANCE_FROM_OUTLINE);
     }
 
     protected Point2D.Double calculateUpperLeftPoint()
     {
         Point2D.Double startPoint = getStartPoint();
         Point2D.Double endPoint = getEndPoint();
-        int startX = (int) startPoint.x;
-        int startY = (int) startPoint.y;
-        int endX = (int) endPoint.x;
-        int endY = (int) endPoint.y;
+        double startX = startPoint.x;
+        double startY = startPoint.y;
+        double endX = endPoint.x;
+        double endY = endPoint.y;
 
         if (startX > endX)
         {
@@ -76,23 +91,23 @@ public class DrawableRectangle extends DrawableShape
 
     protected Point2D.Double calculateUpperLeftFromCenter(Point2D.Double center, double width, double height)
     {
-        int x = (int) (center.x - (width / 2));
-        int y = (int) (center.y - (height / 2));
+        double x = (center.x - (width / 2.0));
+        double y = (center.y - (height / 2.0));
         return new Point2D.Double(x, y);
     }
 
     protected Point2D.Double calculateLowerRightFromUpperLeft(Point2D.Double upperLeft, double width, double height)
     {
-        int lowerRightX = (int) (upperLeft.x + width);
-        int lowerRightY = (int) (upperLeft.y + height);
+        double lowerRightX = (upperLeft.x + width);
+        double lowerRightY = (upperLeft.y + height);
         return new Point2D.Double(lowerRightX, lowerRightY);
     }
 
     protected Point2D.Double calculateCenterFromUpperLeft()
     {
         Point2D.Double upperLeft = calculateUpperLeftPoint();
-        int x = (int) (upperLeft.x + getWidth() / 2);
-        int y = (int) (upperLeft.y + getHeight() / 2);
+        double x =  (upperLeft.x + getWidth() / 2.0);
+        double y =  (upperLeft.y + getHeight() / 2.0);
         return new Point2D.Double(x, y);
     }
 
@@ -130,7 +145,10 @@ public class DrawableRectangle extends DrawableShape
     @Override
     public Shape getModelShape()
     {
-        return new Rectangle(getColor(), calculateCenterFromUpperLeft(), getWidth(), getHeight());
+        Rectangle rectangle = new Rectangle(getColor(), calculateCenterFromUpperLeft(), getWidth(), getHeight());
+        if (getRotation() != 0.0)
+            rectangle.setRotation(getRotation());
+        return rectangle;
     }
 
 }

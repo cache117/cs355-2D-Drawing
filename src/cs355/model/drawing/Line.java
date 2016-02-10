@@ -70,4 +70,28 @@ public class Line extends Shape
     {
         return 4.0;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+
+        Line line = (Line) o;
+
+        return end.equals(line.end);
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = super.hashCode();
+        result = 31 * result + end.hashCode();
+        return result;
+    }
 }
