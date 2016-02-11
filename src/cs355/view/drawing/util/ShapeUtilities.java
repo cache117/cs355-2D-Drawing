@@ -1,4 +1,4 @@
-package cs355.view.drawing;
+package cs355.view.drawing.util;
 
 import cs355.GUIFunctions;
 
@@ -124,5 +124,15 @@ public class ShapeUtilities
     public static boolean pointInEllipse(Point2D.Double point, Point2D.Double center, double xRadius, double yRadius)
     {
         return (Math.pow(((point.x - center.x) / xRadius), 2) + Math.pow(((point.y - center.y) / yRadius), 2) <= 1);
+    }
+
+    public static boolean pointInTriangle(Point2D.Double point, Point2D.Double a, Point2D.Double b, Point2D.Double c)
+    {
+        return false;
+    }
+
+    public static boolean pointCloseEnoughToLine(Point2D.Double point, Point2D.Double lineStart, Point2D.Double lineEnd)
+    {
+        return false;
     }
 }

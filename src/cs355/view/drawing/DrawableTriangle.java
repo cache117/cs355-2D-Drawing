@@ -3,8 +3,10 @@ package cs355.view.drawing;
 import cs355.GUIFunctions;
 import cs355.model.drawing.*;
 import cs355.model.drawing.Shape;
+import cs355.view.drawing.util.Transform;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -35,14 +37,14 @@ public class DrawableTriangle extends DrawableShape
     protected void calculatePointsFromShape(Shape shape)
     {
         Triangle triangle = (Triangle) shape;
-        /*
+
         setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), getRotation(), getCenterPoint()));
         setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), getRotation(), getCenterPoint()));
         setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), getRotation(), getCenterPoint()));
-        */
-        setStartPoint(triangle.getA());
-        setMiddlePoint(triangle.getB());
-        setEndPoint(triangle.getC());
+
+//        setStartPoint(triangle.getA());
+//        setMiddlePoint(triangle.getB());
+//        setEndPoint(triangle.getC());
     }
 
     @Override
@@ -54,13 +56,13 @@ public class DrawableTriangle extends DrawableShape
     @Override
     public Shape getModelShape()
     {
-        /*
+
         Triangle triangle = new Triangle(getColor(), getCenterPoint(),
                 Transform.getObjectPointFromWorldPoint(getStartPoint(), getRotation(), getCenterPoint()),
                 Transform.getObjectPointFromWorldPoint(getMiddlePoint(), getRotation(), getCenterPoint()),
                 Transform.getObjectPointFromWorldPoint(getEndPoint(), getRotation(), getCenterPoint()));
-                */
-        Triangle triangle = new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
+
+//        Triangle triangle = new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
         if (getRotation() != 0.0)
             triangle.setRotation(getRotation());
         return triangle;
@@ -164,7 +166,8 @@ public class DrawableTriangle extends DrawableShape
     @Override
     protected void applyTransformationToGraphics(Graphics2D graphics2D)
     {
-
+        AffineTransform affineTransform = new AffineTransform();
+        graphics2D.setTransform(affineTransform);
     }
 
     @Override

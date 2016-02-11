@@ -1,6 +1,8 @@
-package cs355.view.drawing;
+package cs355.view.drawing.util;
 
 import cs355.model.drawing.Shape;
+import cs355.view.drawing.DrawableNullShape;
+import cs355.view.drawing.DrawableShape;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;

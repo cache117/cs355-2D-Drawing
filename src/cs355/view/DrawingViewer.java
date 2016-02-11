@@ -6,7 +6,7 @@ import cs355.model.drawing.*;
 import cs355.model.drawing.Shape;
 import cs355.view.drawing.DrawableNullShape;
 import cs355.view.drawing.DrawableShape;
-import cs355.view.drawing.DrawableShapeFactory;
+import cs355.view.drawing.util.DrawableShapeFactory;
 import cs355.view.drawing.InvalidPointsException;
 
 import java.awt.*;

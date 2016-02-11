@@ -2,6 +2,7 @@ package cs355.view.drawing;
 
 import cs355.model.drawing.Circle;
 import cs355.model.drawing.Shape;
+import cs355.view.drawing.util.ShapeUtilities;
 
 import java.awt.*;
 import java.awt.geom.Point2D;

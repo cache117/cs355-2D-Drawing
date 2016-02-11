@@ -64,8 +64,11 @@ public class DrawingModel extends CS355Drawing
     @Override
     public void deleteShape(int index)
     {
-        shapes.remove(index);
-        this.notifyObservers();
+        if (index != -1)
+        {
+            shapes.remove(index);
+            this.notifyObservers();
+        }
     }
 
     @Override

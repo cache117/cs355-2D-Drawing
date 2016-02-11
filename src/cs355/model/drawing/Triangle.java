@@ -1,5 +1,8 @@
 package cs355.model.drawing;
 
+import cs355.view.drawing.util.ShapeUtilities;
+import cs355.view.drawing.util.Transform;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
@@ -107,7 +110,7 @@ public class Triangle extends Shape
     @Override
     public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        return false;
+        return ShapeUtilities.pointInTriangle(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), getA(), getB(), getC());
     }
 
     private double getGreatestDistanceFromCenter()

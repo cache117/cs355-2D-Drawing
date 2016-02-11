@@ -7,6 +7,7 @@ import java.awt.geom.Point2D;
 import cs355.model.drawing.CS355Drawing;
 import cs355.model.drawing.DrawingModel;
 import cs355.model.drawing.Shape;
+import cs355.view.drawing.util.Transform;
 
 /**
  * Drawable shapes represent the shapes in the model. The respective subclasses take care of the drawing/manipulation of the corresponding shape.
@@ -27,10 +28,7 @@ public abstract class DrawableShape
 
     public DrawableShape(Shape shape)
     {
-        this();
-        this.color = shape.getColor();
-        this.centerPoint = shape.getCenter();
-        this.rotation = shape.getRotation();
+        this(shape.getColor(), shape.getCenter(), shape.getRotation());
         this.calculatePointsFromShape(shape);
         this.setNumberOfActualPoints(getExpectedPoints());
     }
@@ -39,6 +37,13 @@ public abstract class DrawableShape
     {
         this();
         this.color = color;
+    }
+
+    private DrawableShape(Color color, Point2D.Double centerPoint, double rotation)
+    {
+        this(color);
+        this.centerPoint = centerPoint;
+        this.rotation = rotation;
     }
 
     public void draw(Graphics2D graphics2D) throws InvalidPointsException
@@ -163,7 +168,11 @@ public abstract class DrawableShape
         this.drawShapeHandle(graphics2D);
     }
 
-    protected abstract void drawShapeHandle(Graphics2D graphics2D);
+    protected void drawShapeHandle(Graphics2D graphics2D)
+    {
+        Point2D.Double handleCenter = getHandleCenterPoint();
+        graphics2D.drawOval((int) handleCenter.x, (int) handleCenter.y, HANDLE_DIAMETER, HANDLE_DIAMETER);
+    }
 
     protected abstract void drawShapeOutline(Graphics2D graphics2D);
 

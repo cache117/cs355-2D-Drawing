@@ -1,6 +1,6 @@
 package cs355.model.drawing;
 
-import cs355.view.drawing.ShapeUtilities;
+import cs355.view.drawing.util.ShapeUtilities;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;

@@ -3,8 +3,10 @@ package cs355.view.drawing;
 import cs355.GUIFunctions;
 import cs355.model.drawing.Line;
 import cs355.model.drawing.Shape;
+import cs355.view.drawing.util.Transform;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -36,22 +38,23 @@ public class DrawableLine extends DrawableShape
     {
         Line line = (Line) shape;
         setStartPoint(getCenterPoint());
-        setEndPoint(line.getEnd());
-        setColor(shape.getColor());
+        setEndPoint(Transform.getWorldPointFromObjectPoint(line.getEnd(), 0.0, getStartPoint()));
     }
 
     @Override
     public Shape getModelShape()
     {
         Point2D.Double start = getStartPoint();
-        Point2D.Double end = getEndPoint();
+        Point2D.Double end = Transform.getObjectPointFromWorldPoint(getEndPoint(), 0.0, start);
         return new Line(getColor(), start, end);
     }
 
     @Override
     protected void drawShapeHandle(Graphics2D graphics2D)
     {
-
+        super.drawShapeHandle(graphics2D);
+        Point2D.Double endHandle = getEndHandleCenterPoint();
+        graphics2D.drawOval((int) endHandle.x, (int) endHandle.y, HANDLE_DIAMETER, HANDLE_DIAMETER);
     }
 
     @Override
@@ -63,7 +66,8 @@ public class DrawableLine extends DrawableShape
     @Override
     protected void applyTransformationToGraphics(Graphics2D graphics2D)
     {
-
+        AffineTransform affineTransform = new AffineTransform();
+        graphics2D.setTransform(affineTransform);
     }
 
     @Override
@@ -72,8 +76,8 @@ public class DrawableLine extends DrawableShape
         return new Point2D.Double(0,0);
     }
 
-    public Point2D.Double getNonCenterHandleCenterPoint()
+    public Point2D.Double getEndHandleCenterPoint()
     {
-        return new Point2D.Double(0,0);
+        return Transform.getObjectPointFromWorldPoint(getEndPoint(), 0.0, getCenterPoint());
     }
 }

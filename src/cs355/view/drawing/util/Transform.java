@@ -1,4 +1,4 @@
-package cs355.view.drawing;
+package cs355.view.drawing.util;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

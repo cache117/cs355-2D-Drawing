@@ -4,6 +4,9 @@ import cs355.GUIFunctions;
 import cs355.model.drawing.*;
 import cs355.model.drawing.Shape;
 import cs355.view.drawing.*;
+import cs355.view.drawing.util.DrawableShapeFactory;
+import cs355.view.drawing.util.ShapeUtilities;
+import cs355.view.drawing.util.Transform;
 
 import java.awt.geom.Point2D;
 import java.util.List;

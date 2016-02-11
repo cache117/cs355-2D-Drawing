@@ -1,5 +1,8 @@
 package cs355.model.drawing;
 
+import cs355.view.drawing.util.ShapeUtilities;
+import cs355.view.drawing.util.Transform;
+
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
@@ -62,7 +65,7 @@ public class Line extends Shape
     @Override
     public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        return false;
+        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, 0.0, getCenter()), getCenter(), getEnd());
     }
 
     @Override

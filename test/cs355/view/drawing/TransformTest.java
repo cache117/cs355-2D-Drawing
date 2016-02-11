@@ -1,6 +1,6 @@
 package cs355.view.drawing;
 
-import org.junit.Assert;
+import cs355.view.drawing.util.Transform;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
