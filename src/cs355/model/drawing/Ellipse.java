@@ -88,7 +88,7 @@ public class Ellipse extends Shape
     @Override
     public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
     {
-        if (rotation == 0)
+        if (getRotation() == 0)
         {
             if (ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), width, height))
             {

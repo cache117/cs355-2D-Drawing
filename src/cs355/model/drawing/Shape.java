@@ -14,10 +14,10 @@ public abstract class Shape
     protected Color color;
 
     // The center of this shape.
-    protected Point2D.Double center;
+    protected Point2D.Double center, oldCenter;
 
     // The rotation of this shape.
-    protected double rotation;
+    protected double rotation, oldRotation;
 
     private boolean selected;
 
@@ -93,6 +93,7 @@ public abstract class Shape
      */
     public void setRotation(double rotation)
     {
+        this.oldRotation = this.rotation;
         this.rotation = rotation;
     }
 
@@ -129,12 +130,23 @@ public abstract class Shape
             return false;
 
         Shape shape = (Shape) o;
-//        if (Double.compare(shape.rotation, rotation) != 0)
+//        if (!rotationSimilar(shape.rotation))
+//            return false;
+//        if (!centerSimilar(shape.center))
 //            return false;
         if (!color.equals(shape.color))
             return false;
-        return center.equals(shape.center);
+        return true;
+    }
 
+    private boolean rotationSimilar(double rotation)
+    {
+        return (this.rotation == rotation) || (this.oldRotation == rotation);
+    }
+
+    private boolean centerSimilar(Point2D.Double center)
+    {
+        return (this.center.equals(center)) || (this.oldCenter.equals(center));
     }
 
     @Override

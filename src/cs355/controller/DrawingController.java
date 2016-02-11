@@ -3,7 +3,6 @@ package cs355.controller;
 import cs355.GUIFunctions;
 import cs355.model.drawing.*;
 import cs355.view.ViewRefresher;
-import cs355.view.drawing.*;
 import cs355.view.drawing.state.DrawingState;
 import cs355.view.drawing.state.InitialState;
 
@@ -28,7 +27,7 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     {
         model = new DrawingModel();
         state = new InitialState();
-        state.setColor(Color.WHITE);
+        state.setColor(Color.WHITE, model);
     }
 
     /* begin CS355Controller methods */
@@ -36,7 +35,7 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     public void colorButtonHit(Color c)
     {
         GUIFunctions.changeSelectedColor(c);
-        state.setColor(c);
+        state.setColor(c, model);
     }
 
     @Override

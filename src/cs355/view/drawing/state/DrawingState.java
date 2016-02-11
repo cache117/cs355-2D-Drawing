@@ -124,7 +124,7 @@ public abstract class DrawingState
         return drawableShape.getColor();
     }
 
-    public void setColor(Color color)
+    public void setColor(Color color, CS355Drawing model)
     {
         drawableShape.setColor(color);
     }

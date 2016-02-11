@@ -117,7 +117,7 @@ public class ShapeUtilities
      *
      * @param point   the point.
      * @param center  the center of the ellipse
-     * @param xRadius the xRaidus of the ellipse
+     * @param xRadius the xRadius of the ellipse
      * @param yRadius the yRadius of the ellipse
      * @return true if the point is in the ellipse, false otherwise.
      */

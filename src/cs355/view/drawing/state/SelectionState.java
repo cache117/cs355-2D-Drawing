@@ -8,6 +8,7 @@ import cs355.view.drawing.util.DrawableShapeFactory;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import java.util.List;
 public class SelectionState extends DrawingState
 {
     private boolean isHandleSelected;
+    private Point2D.Double dragStart;
+    private boolean dragging;
+    private int currentlySelectedShapeIndex;
 
     public SelectionState()
     {
@@ -29,12 +33,7 @@ public class SelectionState extends DrawingState
     @Override
     public void mouseClicked(Point2D.Double point, CS355Drawing model)
     {
-        /*
-        if (isShapeSelected())
-            this.checkForSelectedHandle(point);
-        if(!isHandleSelected)
-            this.checkForSelectedShape(point, model);
-        */
+        this.checkForSelectedShape(point, model);
     }
 
     @Override
@@ -44,39 +43,6 @@ public class SelectionState extends DrawingState
             this.checkForSelectedHandle(point);
         if (!isHandleSelected)
             this.checkForSelectedShape(point, model);
-    }
-
-    private void checkForSelectedHandle(Point2D.Double point)
-    {
-        DrawableShape drawableShape = getDrawableShape();
-        //Clone so it doesn't modify the point
-        Point2D.Double worldPoint = (Point2D.Double) point.clone();
-        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, drawableShape.getRotation(), drawableShape.getCenterPoint());
-        if (ShapeUtilities.pointInBoundingCircle(objectPoint, getDrawableShape().getHandleCenterPoint(), DrawableShape.HANDLE_DIAMETER / 2.0))
-        {
-            isHandleSelected = true;
-            //GUIFunctions.printf("Selected handle");
-        }
-    }
-
-    private void checkForSelectedShape(Point2D.Double point, CS355Drawing model)
-    {
-        List<Shape> shapes = model.getShapes();
-        setIsShapeSelected(false);
-        isHandleSelected = false;
-        for (Shape shape : shapes)
-        {
-            if (shape.pointInShape(point, shape.getTolerance()) && !isShapeSelected())
-            {
-                shape.setSelected(true);
-                setDrawableShape(DrawableShapeFactory.createDrawableShape(shape));
-                setIsShapeSelected(true);
-                updateColorFromShape(shape);
-            } else
-                shape.setSelected(false);
-
-        }
-        model.notifyObservers();
     }
 
     @Override
@@ -89,7 +55,8 @@ public class SelectionState extends DrawingState
                 applyRotation(model, point);
             } else
             {
-                //drag shape
+                dragging = true;
+                applyDrag(model, point);
             }
         }
     }
@@ -101,19 +68,65 @@ public class SelectionState extends DrawingState
         {
             if (isHandleSelected)
             {
+                //end Rotate shape
                 applyRotation(model, point);
                 isHandleSelected = false;
             } else
             {
-                //end drag shape
+                applyDrag(model, point);
             }
+        }
+    }
+
+    private void checkForSelectedHandle(Point2D.Double point)
+    {
+        DrawableShape drawableShape = getDrawableShape();
+        //Clone so it doesn't modify the point
+        Point2D.Double worldPoint = (Point2D.Double) point.clone();
+        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, drawableShape.getRotation(), drawableShape.getCenterPoint());
+        if (ShapeUtilities.pointInBoundingCircle(objectPoint, getDrawableShape().getHandleCenterPoint(), DrawableShape.HANDLE_RADIUS))
+        {
+            isHandleSelected = true;
+        }
+    }
+
+    private void checkForSelectedShape(Point2D.Double point, CS355Drawing model)
+    {
+        List<Shape> shapes = model.getShapes();
+        setIsShapeSelected(false);
+        isHandleSelected = false;
+        for (int i = 0; i < shapes.size(); ++i)
+        {
+            Shape shape = shapes.get(i);
+            if (shape.pointInShape(point, shape.getTolerance()) && !isShapeSelected())
+            {
+                shape.setSelected(true);
+                currentlySelectedShapeIndex = i;
+                setDrawableShape(DrawableShapeFactory.createDrawableShape(shape));
+                setIsShapeSelected(true);
+                updateColorFromShape(shape);
+                this.dragStart = Transform.getObjectPointFromWorldPoint(point, shape.getRotation(), shape.getCenter());
+            } else
+                shape.setSelected(false);
+
+        }
+        model.notifyObservers();
+    }
+
+    @Override
+    public void setColor(Color color, CS355Drawing model)
+    {
+        if (isShapeSelected())
+        {
+            getCurrentShapeFromModel(model).setColor(color);
+            model.notifyObservers();
         }
     }
 
     private void updateColorFromShape(Shape shape)
     {
         GUIFunctions.changeSelectedColor(shape.getColor());
-        setColor(shape.getColor());
+        super.setColor(shape.getColor(), null);
     }
 
     @Override
@@ -126,74 +139,69 @@ public class SelectionState extends DrawingState
         }
         isHandleSelected = false;
         setIsShapeSelected(false);
+        currentlySelectedShapeIndex = -1;
         model.notifyObservers();
     }
 
     @Override
     public void deleteShape(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        model.deleteShape(shapeIndex);
+        model.deleteShape(currentlySelectedShapeIndex);
         stateChanged(model);
     }
 
     @Override
     public void moveShapeForward(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        model.moveForward(shapeIndex);
+        model.moveForward(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeBackward(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        model.moveBackward(shapeIndex);
+        model.moveBackward(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeToFront(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        model.moveToFront(shapeIndex);
+        model.moveToFront(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeToBack(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        model.movetoBack(shapeIndex);
-    }
-
-    private int getShapeIndexFromModel(CS355Drawing model)
-    {
-        return ((DrawingModel) model).getShapeIndex(getDrawableShape().getModelShape());
-    }
-
-    private double calculateInverseTangent(double y, double x)
-    {
-        double rotation =  Math.atan2(y, x);
-        System.out.printf("(%f,%f): Rotation: %f\n", x, y, rotation);
-        return rotation;
-    }
-
-    private double calculateInverseTangentFromWorldPoint(Point2D.Double worldPoint, Shape shape)
-    {
-        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, shape.getRotation(), shape.getCenter());
-        return calculateInverseTangent(objectPoint.y, objectPoint.x);
+        model.movetoBack(currentlySelectedShapeIndex);
     }
 
     private Shape getCurrentShapeFromModel(CS355Drawing model)
     {
-        int shapeIndex = getShapeIndexFromModel(model);
-        return model.getShape(shapeIndex);
+        return model.getShape(currentlySelectedShapeIndex);
+    }
+
+    private double calculateRotation(Point2D.Double objectPoint)
+    {
+        return Math.atan2(objectPoint.y, objectPoint.x);
     }
 
     private void applyRotation(CS355Drawing model, Point2D.Double worldPoint)
     {
         Shape shape = getCurrentShapeFromModel(model);
-        double rotation = calculateInverseTangentFromWorldPoint(worldPoint, shape);
+        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, shape.getRotation(), shape.getCenter());
+        double rotation = calculateRotation(objectPoint);
         shape.setRotation(rotation);
+        model.notifyObservers();
+    }
+
+    private void applyDrag(CS355Drawing model, Point2D.Double worldPoint)
+    {
+        //Get point in object
+        //Get the new point's relation to where the center is
+        //set center
+        double newCenterX = worldPoint.x - dragStart.x;
+        double newCenterY = worldPoint.y - dragStart.y;
+        Shape shape = getCurrentShapeFromModel(model);
+        shape.setCenter(new Point2D.Double(newCenterX, newCenterY));
         model.notifyObservers();
     }
 }
