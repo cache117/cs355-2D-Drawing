@@ -80,42 +80,32 @@ public class SelectionState extends DrawingState
     }
 
     @Override
-    public void mouseReleased(Point2D.Double point, CS355Drawing model)
-    {
-        if (isShapeSelected())
-        {
-            if (isHandleSelected)
-            {
-                //end Rotate shape
-                double rotation = Math.atan2(point.y, point.x);
-                int shapeIndex = getShapeIndexFromModel(model);
-                model.getShape(shapeIndex).setRotation(rotation);
-                GUIFunctions.printf("Rotation : %s", rotation);
-                isHandleSelected = false;
-                model.notifyObservers();
-            } else
-            {
-                //end drag shape
-            }
-        }
-    }
-
-    @Override
     public void mouseDragged(Point2D.Double point, CS355Drawing model)
     {
         if (isShapeSelected())
         {
             if (isHandleSelected)
             {
-                //end Rotate shape
-                double rotation = Math.atan2(point.y, point.x);
-                int shapeIndex = getShapeIndexFromModel(model);
-                model.getShape(shapeIndex).setRotation(rotation);
-                GUIFunctions.printf("Rotation : %s", rotation);
-                model.notifyObservers();
+                applyRotation(model, point);
             } else
             {
                 //drag shape
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(Point2D.Double point, CS355Drawing model)
+    {
+        if (isShapeSelected())
+        {
+            if (isHandleSelected)
+            {
+                applyRotation(model, point);
+                isHandleSelected = false;
+            } else
+            {
+                //end drag shape
             }
         }
     }
@@ -178,5 +168,32 @@ public class SelectionState extends DrawingState
     private int getShapeIndexFromModel(CS355Drawing model)
     {
         return ((DrawingModel) model).getShapeIndex(getDrawableShape().getModelShape());
+    }
+
+    private double calculateInverseTangent(double y, double x)
+    {
+        double rotation =  Math.atan2(y, x);
+        System.out.printf("(%f,%f): Rotation: %f\n", x, y, rotation);
+        return rotation;
+    }
+
+    private double calculateInverseTangentFromWorldPoint(Point2D.Double worldPoint, Shape shape)
+    {
+        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, shape.getRotation(), shape.getCenter());
+        return calculateInverseTangent(objectPoint.y, objectPoint.x);
+    }
+
+    private Shape getCurrentShapeFromModel(CS355Drawing model)
+    {
+        int shapeIndex = getShapeIndexFromModel(model);
+        return model.getShape(shapeIndex);
+    }
+
+    private void applyRotation(CS355Drawing model, Point2D.Double worldPoint)
+    {
+        Shape shape = getCurrentShapeFromModel(model);
+        double rotation = calculateInverseTangentFromWorldPoint(worldPoint, shape);
+        shape.setRotation(rotation);
+        model.notifyObservers();
     }
 }
