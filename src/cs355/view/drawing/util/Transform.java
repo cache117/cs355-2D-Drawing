@@ -61,14 +61,8 @@ public class Transform
 
     private static AffineTransform buildWorldToObjectTransformation(double rotation, Point2D.Double center)
     {
-        AffineTransform affineTransform = buildObjectToWorldTransformation(rotation, center);
-        try
-        {
-            affineTransform.invert();
-        } catch (NoninvertibleTransformException e)
-        {
-            e.printStackTrace();
-        }
+        AffineTransform affineTransform = buildRotationTransform(-rotation);
+        affineTransform.concatenate(buildTranslationTransform(-center.x, -center.y));
         return affineTransform;
     }
 
@@ -81,14 +75,8 @@ public class Transform
 
     private static AffineTransform buildViewToWorldTransformation(double scaling, Point2D.Double viewportUpperLeft)
     {
-        AffineTransform affineTransform = buildWorldToViewTransformation(scaling, viewportUpperLeft);
-        try
-        {
-            affineTransform.invert();
-        } catch (NoninvertibleTransformException e)
-        {
-            e.printStackTrace();
-        }
+        AffineTransform affineTransform = buildTranslationTransform(-viewportUpperLeft.x, -viewportUpperLeft.y);
+        affineTransform.concatenate(buildScalingTransform(-scaling, -scaling));
         return affineTransform;
     }
 
@@ -101,14 +89,8 @@ public class Transform
 
     private static AffineTransform buildViewToObjectTransformation(double rotation, Point2D.Double center, double scaling, Point2D.Double viewportUpperLeft)
     {
-        AffineTransform affineTransform = buildObjectToViewTransformation(rotation, center, scaling, viewportUpperLeft);
-        try
-        {
-            affineTransform.invert();
-        } catch (NoninvertibleTransformException e)
-        {
-            e.printStackTrace();
-        }
+        AffineTransform affineTransform = buildViewToWorldTransformation(scaling, viewportUpperLeft);
+        affineTransform.concatenate(buildWorldToObjectTransformation(rotation, center));
         return affineTransform;
     }
 

@@ -13,8 +13,9 @@ import java.awt.geom.Point2D;
 public abstract class DrawingState
 {
     private DrawableShape drawableShape;
-
     private boolean shapeSelected;
+    private Point2D.Double viewportUpperLeft;
+    private double scalingFactor;
 
     public DrawingState(DrawableShape shape)
     {
@@ -87,6 +88,26 @@ public abstract class DrawingState
 
     }
 
+    public void zoomInButtonHit()
+    {
+
+    }
+
+    public void zoomOutButtonHit()
+    {
+
+    }
+
+    public void hScrollbarChanged(int value)
+    {
+
+    }
+
+    public void vScrollbarChanged(int value)
+    {
+
+    }
+
     /**
      * Changes the shape that can be stored in the model after clicking a mouseClicked event.
      *
@@ -153,4 +174,6 @@ public abstract class DrawingState
     {
 
     }
+
+
 }
