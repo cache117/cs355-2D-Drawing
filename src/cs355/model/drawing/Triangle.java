@@ -103,19 +103,28 @@ public class Triangle extends Shape
      * here. You shouldn't need the tolerance.
      *
      * @param worldPoint = the point to test against.
-     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape,
      * false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
+        double greatestDistanceFromCenter = getGreatestDistanceFromCenter();
+        if (!ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), greatestDistanceFromCenter * 2, greatestDistanceFromCenter * 2))
+            return false;
+        if (!ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), greatestDistanceFromCenter))
+            return false;
         return ShapeUtilities.pointInTriangle(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), getA(), getB(), getC());
+//        return ShapeUtilities.pointInTriangle(worldPoint, getA(), getB(), getC());
     }
 
     private double getGreatestDistanceFromCenter()
     {
-        return 0.0;
+        //TODO this is exactly the same as DrawableTriangle$getGreatestDistanceFromCenter()
+        double firstDistance = Point2D.distance(a.x, a.y, getCenter().x, getCenter().y);
+        double middleDistance = Point2D.distance(b.x, b.y, getCenter().x, getCenter().y);
+        double endDistance = Point2D.distance(c.x, c.y, getCenter().x, getCenter().y);
+        return Math.max(firstDistance, Math.max(middleDistance, endDistance));
     }
 
     @Override

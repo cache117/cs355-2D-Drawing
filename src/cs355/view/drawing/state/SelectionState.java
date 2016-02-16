@@ -19,7 +19,6 @@ public class SelectionState extends DrawingState
 {
     private boolean isHandleSelected;
     private Point2D.Double dragStart;
-    private boolean dragging;
     private int currentlySelectedShapeIndex;
 
     public SelectionState()
@@ -55,7 +54,6 @@ public class SelectionState extends DrawingState
                 applyRotation(model, point);
             } else
             {
-                dragging = true;
                 applyDrag(model, point);
             }
         }
@@ -98,7 +96,7 @@ public class SelectionState extends DrawingState
         for (int i = 0; i < shapes.size(); ++i)
         {
             Shape shape = shapes.get(i);
-            if (shape.pointInShape(point, shape.getTolerance()) && !isShapeSelected())
+            if (shape.pointInShape(point) && !isShapeSelected())
             {
                 shape.setSelected(true);
                 currentlySelectedShapeIndex = i;
@@ -146,6 +144,7 @@ public class SelectionState extends DrawingState
     @Override
     public void deleteShape(CS355Drawing model)
     {
+        //TODO this needs to modify the index
         model.deleteShape(currentlySelectedShapeIndex);
         stateChanged(model);
     }
@@ -153,24 +152,28 @@ public class SelectionState extends DrawingState
     @Override
     public void moveShapeForward(CS355Drawing model)
     {
+        //TODO this needs to modify the index
         model.moveForward(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeBackward(CS355Drawing model)
     {
+        //TODO this needs to modify the index
         model.moveBackward(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeToFront(CS355Drawing model)
     {
+        //TODO this needs to modify the index
         model.moveToFront(currentlySelectedShapeIndex);
     }
 
     @Override
     public void moveShapeToBack(CS355Drawing model)
     {
+        //TODO this needs to modify the index
         model.movetoBack(currentlySelectedShapeIndex);
     }
 

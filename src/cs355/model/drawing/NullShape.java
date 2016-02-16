@@ -17,7 +17,7 @@ public class NullShape extends Shape
     }
 
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
         return false;
     }

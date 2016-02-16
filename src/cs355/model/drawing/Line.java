@@ -58,18 +58,15 @@ public class Line extends Shape
      * here. You <i>will</i> need the tolerance.
      *
      * @param worldPoint = the point to test against.
-     * @param tolerance  = the allowable tolerance.
-     * @return true if pt is in the shape,
-     * false otherwise.
+     * @return true if pt is in the shape, false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
-        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, 0.0, getCenter()), getCenter(), getEnd());
+        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, NO_ROTATION, getCenter()), getCenter(), getEnd(), getTolerance());
     }
 
-    @Override
-    public double getTolerance()
+    private double getTolerance()
     {
         return 4.0;
     }

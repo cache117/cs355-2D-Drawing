@@ -28,9 +28,15 @@ public class DrawableTriangle extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics)
+    public void drawShape(Graphics2D graphics2D)
     {
-        graphics.fillPolygon(getXPoints(), getYPoints(), getExpectedPoints());
+        graphics2D.fillPolygon(getXPoints(), getYPoints(), getExpectedPoints());
+    }
+
+    @Override
+    public void drawShapeOutline(Graphics2D graphics2D)
+    {
+        graphics2D.drawPolygon(getXPoints(), getYPoints(), getExpectedPoints());
     }
 
     @Override
@@ -56,7 +62,6 @@ public class DrawableTriangle extends DrawableShape
     @Override
     public Shape getModelShape()
     {
-
         Triangle triangle = new Triangle(getColor(), getCenterPoint(),
                 Transform.getObjectPointFromWorldPoint(getStartPoint(), getRotation(), getCenterPoint()),
                 Transform.getObjectPointFromWorldPoint(getMiddlePoint(), getRotation(), getCenterPoint()),
@@ -66,21 +71,6 @@ public class DrawableTriangle extends DrawableShape
         if (getRotation() != 0.0)
             triangle.setRotation(getRotation());
         return triangle;
-    }
-
-    @Override
-    protected void drawShapeHandle(Graphics2D graphics2D)
-    {
-        double greatestDistance = getGreatestDistanceFromCenter();
-        graphics2D.drawOval(-HANDLE_DIAMETER / 2, (int) (-greatestDistance - HANDLE_DISTANCE_FROM_OUTLINE), HANDLE_DIAMETER, HANDLE_DIAMETER);
-    }
-
-    @Override
-    public void drawShapeOutline(Graphics2D graphics2D)
-    {
-        double greatestDistance = getGreatestDistanceFromCenter();
-        Point2D.Double upperLeft = new Point2D.Double(-greatestDistance, -greatestDistance);
-        graphics2D.drawRect((int) upperLeft.x, (int) upperLeft.y, (int) greatestDistance * 2, (int) greatestDistance * 2);
     }
 
     double getAveragePoint(double p1, double p2, double p3)
@@ -157,6 +147,7 @@ public class DrawableTriangle extends DrawableShape
 
     private double getGreatestDistanceFromCenter()
     {
+        //TODO this is exactly the same as Triangle$getGreatestDistanceFromCenter()
         double firstDistance = Point2D.distance(getStartPoint().x, getStartPoint().y, getCenterPoint().x, getCenterPoint().y);
         double middleDistance = Point2D.distance(getMiddlePoint().x, getMiddlePoint().y, getCenterPoint().x, getCenterPoint().y);
         double endDistance = Point2D.distance(getEndPoint().x, getEndPoint().y, getCenterPoint().x, getCenterPoint().y);
@@ -173,6 +164,6 @@ public class DrawableTriangle extends DrawableShape
     @Override
     public Point2D.Double getHandleCenterPoint()
     {
-        return new Point2D.Double(0, -getGreatestDistanceFromCenter() / 2 - HANDLE_DISTANCE_FROM_OUTLINE);
+        return getStartPoint();
     }
 }

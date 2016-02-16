@@ -24,7 +24,6 @@ public class Circle extends Shape
      */
     public Circle(Color color, Point2D.Double center, double radius)
     {
-
         // Initialize the superclass.
         super(color, center);
 
@@ -57,12 +56,11 @@ public class Circle extends Shape
      * here. You shouldn't need the tolerance.
      *
      * @param worldPoint = the point to test against.
-     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape,
      * false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
         return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getRadius() * 2, getRadius() * 2) && ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getRadius());
     }

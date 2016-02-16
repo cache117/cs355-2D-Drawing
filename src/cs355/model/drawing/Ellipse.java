@@ -82,13 +82,12 @@ public class Ellipse extends Shape
      * Add your code to do an intersection test here. You shouldn't need the tolerance.
      *
      * @param worldPoint = the point to test against.
-     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape, false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
-        if (getRotation() == 0)
+        if (getRotation() == NO_ROTATION)
         {
             if (ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), width, height))
             {
@@ -100,11 +99,16 @@ public class Ellipse extends Shape
                 return false;
         } else
         {
-            if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius()))
+            if (ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getLargerRadius(), getLargerRadius()))
             {
-                Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter());
-                return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
-            } else
+                if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius() / 2))
+                {
+                    Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter());
+                    return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
+                } else
+                    return false;
+            }
+            else
                 return false;
         }
     }

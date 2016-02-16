@@ -1,7 +1,5 @@
 package cs355.view.drawing.util;
 
-import cs355.GUIFunctions;
-
 import java.awt.geom.Point2D;
 
 /**
@@ -128,11 +126,73 @@ public class ShapeUtilities
 
     public static boolean pointInTriangle(Point2D.Double point, Point2D.Double a, Point2D.Double b, Point2D.Double c)
     {
-        return false;
+        Vector q = new Vector(point);
+        Vector p0 = new Vector(a);
+        Vector p1 = new Vector(b);
+        Vector p2 = new Vector(c);
+
+        //(q-p0)*(p1-p0).orthog()
+        double firstDotProduct = (q.subtract(p0)).dotProduct(p1.subtract(p0).orthogonalize());
+        double secondDotProduct = (q.subtract(p1)).dotProduct(p2.subtract(p1).orthogonalize());
+        double thirdDotProduct = (q.subtract(p2)).dotProduct(p0.subtract(p2).orthogonalize());
+        return allSameSign(firstDotProduct, secondDotProduct, thirdDotProduct);
     }
 
-    public static boolean pointCloseEnoughToLine(Point2D.Double point, Point2D.Double lineStart, Point2D.Double lineEnd)
+    public static boolean pointCloseEnoughToLine(Point2D.Double point, Point2D.Double lineStart, Point2D.Double lineEnd, double tolerance)
     {
+        //q' = q + (d - q * n^)*n^
+        Vector pointToCheck = new Vector(point);
+        Vector start = new Vector(lineStart);
+        Vector end = new Vector(lineEnd);
+        Vector normalToLine = Vector.calculateNormal(start, end);
+        double lineDistanceFromOrigin = start.dotProduct(normalToLine);
+        Vector nearestPointOnLine = pointToCheck.add(normalToLine.applyScaling(lineDistanceFromOrigin - (pointToCheck.dotProduct(normalToLine))));
+        double pointDistanceFromLine = nearestPointOnLine.length(pointToCheck);
+        return pointDistanceFromLine <= tolerance;
+        /*
+        //Nicks
+        double startX = lineStart.getX();		//p0
+        double startY = lineStart.getY();		//p0
+        double endX = lineEnd.getX();		//p1
+        double endY = lineEnd.getY();		//p1
+        double length = Math.sqrt((Math.pow((endX-startX), 2) + Math.pow((endY-startY), 2)));	// a2+b2 = c2
+
+        Point2D.Double dHat = new Point2D.Double(((endX-startX)/length), ((endY-startY)/length)); //(p1 - p0 / length of line)
+        double tx = (x - startX) * dHat.getX();	//(q-p0)*dHat
+        double ty = (y - startY) * dHat.getY();	//(q-p0)*dHat
+        double t = tx + ty;
+
+        Point2D.Double q = new Point2D.Double((startX + t*dHat.getX()), (startY + t*dHat.getY()));	//q = p0 + t * dHat
+
+        double distance = Math.sqrt(Math.pow((q.getX()-x), 2) + Math.pow((q.getY()-y), 2));	//distance to line -> pythagorian
+
+        return distance <= 4;
+
+        //Amanda
+        double X0 = pt.getX();
+        double Y0 = pt.getY();
+        double X1 = center.getX();
+        double Y1 = center.getY();
+        double X2 = end.getX();
+        double Y2 = end.getY();
+        double slope = (Y2-Y1)/(X2-X1);
+        double tangentSlope = -1/slope;
+        double degree = Math.atan(tangentSlope);
+        Y0 += Math.sin(degree);
+        X0 += Math.cos(degree);
+        if (X0 <= (Math.max(X1, X2)+tolerance) && X0 >= (Math.min(X1,X2)-tolerance) && Y0 <= (Math.max(Y1,Y2)+tolerance) && Y0 >= (Math.min(Y1, Y2)-tolerance))
+        {
+            return true;
+        }
         return false;
+        */
+    }
+
+    private static boolean allSameSign(double first, double second, double third)
+    {
+        if (first > 0)
+            return second > 0 && third > 0;
+        else
+            return first < 0 && second < 0 && third < 0;
     }
 }

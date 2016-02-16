@@ -58,14 +58,13 @@ public class Square extends Shape
      * here. You shouldn't need the tolerance.
      *
      * @param worldPoint = the point to test against.
-     * @param tolerance  = the allowable tolerance.
      * @return true if pt is in the shape,
      * false otherwise.
      */
     @Override
-    public boolean pointInShape(Point2D.Double worldPoint, double tolerance)
+    public boolean pointInShape(Point2D.Double worldPoint)
     {
-        if (getRotation() == 0)
+        if (getRotation() == NO_ROTATION)
             return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getSize(), getSize());
         else
             return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), new Point2D.Double(0, 0), getSize(), getSize());

@@ -46,7 +46,7 @@ public abstract class DrawableShape
         this.rotation = rotation;
     }
 
-    public void draw(Graphics2D graphics2D) throws InvalidPointsException
+    public void draw(Graphics2D graphics2D)
     {
         graphics2D.setColor(getColor());
         this.applyTransformationToGraphics(graphics2D);
@@ -171,7 +171,7 @@ public abstract class DrawableShape
     protected void drawShapeHandle(Graphics2D graphics2D)
     {
         Point2D.Double handleCenter = getHandleCenterPoint();
-        graphics2D.drawOval((int) handleCenter.x, (int) handleCenter.y, HANDLE_DIAMETER, HANDLE_DIAMETER);
+        graphics2D.drawOval((int) handleCenter.x - HANDLE_RADIUS, (int) handleCenter.y - HANDLE_RADIUS, HANDLE_DIAMETER, HANDLE_DIAMETER);
     }
 
     protected abstract void drawShapeOutline(Graphics2D graphics2D);

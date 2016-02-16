@@ -7,12 +7,10 @@ import cs355.model.drawing.Shape;
 import cs355.view.drawing.DrawableNullShape;
 import cs355.view.drawing.DrawableShape;
 import cs355.view.drawing.util.DrawableShapeFactory;
-import cs355.view.drawing.InvalidPointsException;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -51,13 +49,7 @@ public class DrawingViewer implements ViewRefresher
                 GUIFunctions.printf("Shape selected");
                 selectedShape = drawableShape;
             }
-            try
-            {
-                drawableShape.draw(graphics2D);
-            } catch (InvalidPointsException e)
-            {
-                LOGGER.log(Level.SEVERE, "Failed to create Drawable Shape for " + shape.toString(), e);
-            }
+            drawableShape.draw(graphics2D);
         }
 
         selectedShape.drawOutline(graphics2D);

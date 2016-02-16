@@ -1,7 +1,6 @@
 package cs355.model.drawing;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -10,6 +9,7 @@ import java.awt.geom.Point2D;
  */
 public abstract class Shape
 {
+    protected static final double NO_ROTATION = 0.0;
     // The color of this shape.
     protected Color color;
 
@@ -32,7 +32,7 @@ public abstract class Shape
     {
         this.color = color;
         this.center = center;
-        rotation = 0.0;
+        rotation = NO_ROTATION;
         this.selected = false;
     }
 
@@ -100,16 +100,10 @@ public abstract class Shape
     /**
      * Used to test for whether the user clicked inside a shape or not.
      *
-     * @param worldPoint        = the point to test whether it's in the shape or not.
-     * @param tolerance = the tolerance for testing. Mostly used for lines.
+     * @param worldPoint = the point to test whether it's in the shape or not.
      * @return true if pt is in the shape, false otherwise.
      */
-    public abstract boolean pointInShape(Point2D.Double worldPoint, double tolerance);
-
-    public double getTolerance()
-    {
-        return 0.0;
-    }
+    public abstract boolean pointInShape(Point2D.Double worldPoint);
 
     public void setSelected(boolean selected)
     {
