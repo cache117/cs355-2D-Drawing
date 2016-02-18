@@ -1,5 +1,6 @@
 package cs355.model.drawing;
 
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
@@ -103,7 +104,7 @@ public class Ellipse extends Shape
             {
                 if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius() / 2))
                 {
-                    Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter());
+                    Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation));
                     return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
                 } else
                     return false;

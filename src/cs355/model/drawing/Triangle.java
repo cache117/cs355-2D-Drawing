@@ -1,5 +1,6 @@
 package cs355.model.drawing;
 
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
@@ -114,7 +115,7 @@ public class Triangle extends Shape
             return false;
         if (!ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), greatestDistanceFromCenter))
             return false;
-        return ShapeUtilities.pointInTriangle(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), getA(), getB(), getC());
+        return ShapeUtilities.pointInTriangle(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), getA(), getB(), getC());
 //        return ShapeUtilities.pointInTriangle(worldPoint, getA(), getB(), getC());
     }
 

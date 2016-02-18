@@ -3,6 +3,8 @@ package cs355.view.drawing;
 import cs355.GUIFunctions;
 import cs355.model.drawing.*;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.Transform;
 
 import java.awt.*;
@@ -28,15 +30,15 @@ public class DrawableTriangle extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics2D)
+    public void drawShape(DrawingParameters drawingParameters)
     {
-        graphics2D.fillPolygon(getXPoints(), getYPoints(), getExpectedPoints());
+        drawingParameters.graphics2D.fillPolygon(getXPoints(), getYPoints(), getExpectedPoints());
     }
 
     @Override
-    public void drawShapeOutline(Graphics2D graphics2D)
+    public void drawShapeOutline(DrawingParameters drawingParameters)
     {
-        graphics2D.drawPolygon(getXPoints(), getYPoints(), getExpectedPoints());
+        drawingParameters.graphics2D.drawPolygon(getXPoints(), getYPoints(), getExpectedPoints());
     }
 
     @Override
@@ -44,9 +46,9 @@ public class DrawableTriangle extends DrawableShape
     {
         Triangle triangle = (Triangle) shape;
 
-        setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), getRotation(), getCenterPoint()));
-        setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), getRotation(), getCenterPoint()));
-        setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), getRotation(), getCenterPoint()));
+        setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), new ObjectParameters(getCenterPoint(), getRotation())));
+        setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), new ObjectParameters(getCenterPoint(), getRotation())));
+        setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), new ObjectParameters(getCenterPoint(), getRotation())));
 
 //        setStartPoint(triangle.getA());
 //        setMiddlePoint(triangle.getB());
@@ -63,9 +65,9 @@ public class DrawableTriangle extends DrawableShape
     public Shape getModelShape()
     {
         Triangle triangle = new Triangle(getColor(), getCenterPoint(),
-                Transform.getObjectPointFromWorldPoint(getStartPoint(), getRotation(), getCenterPoint()),
-                Transform.getObjectPointFromWorldPoint(getMiddlePoint(), getRotation(), getCenterPoint()),
-                Transform.getObjectPointFromWorldPoint(getEndPoint(), getRotation(), getCenterPoint()));
+                Transform.getObjectPointFromWorldPoint(getStartPoint(), new ObjectParameters(getCenterPoint(), getRotation())),
+                Transform.getObjectPointFromWorldPoint(getMiddlePoint(), new ObjectParameters(getCenterPoint(), getRotation())),
+                Transform.getObjectPointFromWorldPoint(getEndPoint(), new ObjectParameters(getCenterPoint(), getRotation())));
 
 //        Triangle triangle = new Triangle(getColor(), getCenterPoint(), getStartPoint(), getMiddlePoint(), getEndPoint());
         if (getRotation() != 0.0)
@@ -155,10 +157,10 @@ public class DrawableTriangle extends DrawableShape
     }
 
     @Override
-    protected void applyTransformationToGraphics(Graphics2D graphics2D)
+    protected void applyTransformationToGraphics(DrawingParameters drawingParameters)
     {
         AffineTransform affineTransform = new AffineTransform();
-        graphics2D.setTransform(affineTransform);
+        drawingParameters.graphics2D.setTransform(affineTransform);
     }
 
     @Override

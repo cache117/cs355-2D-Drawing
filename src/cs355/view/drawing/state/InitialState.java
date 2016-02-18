@@ -2,7 +2,9 @@ package cs355.view.drawing.state;
 
 import cs355.model.drawing.CS355Drawing;
 import cs355.view.drawing.DrawableNullShape;
+import cs355.view.drawing.DrawableShape;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
@@ -12,7 +14,7 @@ public class InitialState extends DrawingState
 {
     public InitialState()
     {
-        super(new DrawableNullShape());
+        super();
     }
 
     @Override
@@ -37,5 +39,11 @@ public class InitialState extends DrawingState
     public void mouseDragged(Point2D.Double point, CS355Drawing model)
     {
 
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableNullShape(color);
     }
 }

@@ -1,5 +1,6 @@
 package cs355.model.drawing;
 
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
@@ -63,7 +64,7 @@ public class Line extends Shape
     @Override
     public boolean pointInShape(Point2D.Double worldPoint)
     {
-        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, NO_ROTATION, getCenter()), getCenter(), getEnd(), getTolerance());
+        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), getCenter(), getEnd(), getTolerance());
     }
 
     private double getTolerance()

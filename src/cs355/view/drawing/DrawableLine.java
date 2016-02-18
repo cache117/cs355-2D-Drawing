@@ -3,6 +3,8 @@ package cs355.view.drawing;
 import cs355.GUIFunctions;
 import cs355.model.drawing.Line;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.Transform;
 
 import java.awt.*;
@@ -26,11 +28,11 @@ public class DrawableLine extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics)
+    public void drawShape(DrawingParameters drawingParameters)
     {
         Point2D.Double start = getStartPoint();
         Point2D.Double end = getEndPoint();
-        graphics.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
+        drawingParameters.graphics2D.drawLine((int) start.x, (int) start.y, (int) end.x, (int) end.y);
     }
 
     @Override
@@ -38,14 +40,14 @@ public class DrawableLine extends DrawableShape
     {
         Line line = (Line) shape;
         setStartPoint(getCenterPoint());
-        setEndPoint(Transform.getWorldPointFromObjectPoint(line.getEnd(), 0.0, getStartPoint()));
+        setEndPoint(Transform.getWorldPointFromObjectPoint(line.getEnd(), new ObjectParameters(getCenterPoint(), getRotation())));
     }
 
     @Override
     public Shape getModelShape()
     {
         Point2D.Double start = getStartPoint();
-        Point2D.Double end = Transform.getObjectPointFromWorldPoint(getEndPoint(), 0.0, start);
+        Point2D.Double end = Transform.getObjectPointFromWorldPoint(getEndPoint(), new ObjectParameters(getCenterPoint(), getRotation()));
         return new Line(getColor(), start, end);
     }
 
@@ -58,16 +60,16 @@ public class DrawableLine extends DrawableShape
     }
 
     @Override
-    public void drawShapeOutline(Graphics2D graphics2D)
+    public void drawShapeOutline(DrawingParameters drawingParameters)
     {
 
     }
 
     @Override
-    protected void applyTransformationToGraphics(Graphics2D graphics2D)
+    protected void applyTransformationToGraphics(DrawingParameters drawingParameters)
     {
         AffineTransform affineTransform = new AffineTransform();
-        graphics2D.setTransform(affineTransform);
+        drawingParameters.graphics2D.setTransform(affineTransform);
     }
 
     @Override
@@ -78,6 +80,6 @@ public class DrawableLine extends DrawableShape
 
     public Point2D.Double getEndHandleCenterPoint()
     {
-        return Transform.getObjectPointFromWorldPoint(getEndPoint(), 0.0, getCenterPoint());
+        return Transform.getObjectPointFromWorldPoint(getEndPoint(), new ObjectParameters(getCenterPoint(), getRotation()));
     }
 }

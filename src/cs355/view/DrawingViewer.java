@@ -26,6 +26,7 @@ public class DrawingViewer implements ViewRefresher
     private static final Logger LOGGER = Logger.getLogger(DrawingViewer.class.getName());
 
     private DrawingModel model;
+    private ViewportParameters viewportParameters;
     // private List<Shape> specificUpdatedShapes;
 
     public DrawingViewer()
@@ -41,22 +42,17 @@ public class DrawingViewer implements ViewRefresher
         List<Shape> shapes = model.getShapesReversed();
 
         DrawableShape selectedShape = new DrawableNullShape();
+        DrawingParameters drawingParameters = new DrawingParameters(graphics2D, viewportParameters);
         for (Shape shape : shapes)
         {
             DrawableShape drawableShape = DrawableShapeFactory.createDrawableShape(shape);
             if (shape.isSelected())
             {
-                GUIFunctions.printf("Shape selected");
                 selectedShape = drawableShape;
             }
-            drawableShape.draw(graphics2D);
+            drawableShape.draw(drawingParameters);
         }
-
-        selectedShape.drawOutline(graphics2D);
-
-
-        //draw on graphics2D
-        //refresh the view with graphics2D
+        selectedShape.drawOutline(drawingParameters);
     }
 
     /* end ViewRefresher methods */
@@ -70,5 +66,8 @@ public class DrawingViewer implements ViewRefresher
     }
     /* end Observer methods */
 
-
+    public void setViewportParameters(ViewportParameters viewportParameters)
+    {
+        this.viewportParameters = viewportParameters;
+    }
 }

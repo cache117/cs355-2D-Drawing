@@ -2,6 +2,7 @@ package cs355.view.drawing;
 
 import cs355.model.drawing.Ellipse;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -29,10 +30,10 @@ public class DrawableEllipse extends DrawableRectangle
     }
 
     @Override
-    public void drawShape(Graphics2D graphics)
+    public void drawShape(DrawingParameters drawingParameters)
     {
         //Point2D.Double upperLeftPoint = calculateUpperLeftPoint();
-        graphics.fillOval((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
+        drawingParameters.graphics2D.fillOval((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
     }
 
     @Override

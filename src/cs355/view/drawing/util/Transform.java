@@ -1,8 +1,10 @@
 package cs355.view.drawing.util;
 
-import java.awt.*;
+import cs355.view.DrawingParameters;
+import cs355.view.ObjectParameters;
+import cs355.view.ViewportParameters;
+
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 /**
@@ -10,94 +12,99 @@ import java.awt.geom.Point2D;
  */
 public class Transform
 {
-    public static void applyTransformationToGraphics(Graphics2D graphics, double rotation, Point2D.Double center)
+    public static void applyTransformationToGraphics(DrawingParameters drawingParameters, ObjectParameters objectParameters)
     {
-        AffineTransform affineTransform = buildObjectToWorldTransformation(rotation, center);
-        graphics.setTransform(affineTransform);
+        AffineTransform affineTransform = buildObjectToWorldTransformation(objectParameters);
+        drawingParameters.graphics2D.setTransform(affineTransform);
     }
 
-    public static Point2D.Double getWorldPointFromObjectPoint(Point2D.Double objectPoint, double rotation, Point2D.Double center)
+    public static Point2D.Double getWorldPointFromObjectPoint(Point2D.Double objectPoint, ObjectParameters objectParameters)
     {
-        AffineTransform affineTransform = buildObjectToWorldTransformation(rotation, center);
+        AffineTransform affineTransform = buildObjectToWorldTransformation(objectParameters);
         return applyTransformationToPoint(affineTransform, objectPoint);
     }
 
-    public static Point2D.Double getObjectPointFromWorldPoint(Point2D.Double worldPoint, double rotation, Point2D.Double center)
+    public static Point2D.Double getObjectPointFromWorldPoint(Point2D.Double worldPoint, ObjectParameters objectParameters)
     {
-        AffineTransform affineTransform = buildWorldToObjectTransformation(rotation, center);
+        AffineTransform affineTransform = buildWorldToObjectTransformation(objectParameters);
         return applyTransformationToPoint(affineTransform, worldPoint);
     }
 
-    public static Point2D.Double getObjectPointFromViewPoint(Point2D.Double viewPoint, double scaling, Point2D.Double viewportUpperLeft, double rotation, Point2D.Double center)
+    public static Point2D.Double getObjectPointFromViewPoint(Point2D.Double viewPoint, ObjectParameters objectParameters, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildViewToObjectTransformation(rotation, center, scaling, viewportUpperLeft);
+        AffineTransform affineTransform = buildViewToObjectTransformation(objectParameters, viewportParameters);
         return applyTransformationToPoint(affineTransform, viewPoint);
     }
 
-    public static Point2D.Double getViewPointFromObjectPoint(Point2D.Double objectPoint, double scaling, Point2D.Double viewportUpperLeft, double rotation, Point2D.Double center)
+    public static Point2D.Double getViewPointFromObjectPoint(Point2D.Double objectPoint, ObjectParameters objectParameters, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildObjectToViewTransformation(rotation, center, scaling, viewportUpperLeft);
+        AffineTransform affineTransform = buildObjectToViewTransformation(objectParameters, viewportParameters);
         return applyTransformationToPoint(affineTransform, objectPoint);
     }
 
-    public static Point2D.Double getWorldPointFromViewPoint(Point2D.Double viewPoint, double scaling, Point2D.Double viewportUpperLeft)
+    public static Point2D.Double getWorldPointFromViewPoint(Point2D.Double viewPoint, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildViewToWorldTransformation(scaling, viewportUpperLeft);
+        AffineTransform affineTransform = buildViewToWorldTransformation(viewportParameters);
         return applyTransformationToPoint(affineTransform, viewPoint);
     }
 
-    public static Point2D.Double getViewPointFromWorldPoint(Point2D.Double worldPoint, double scaling, Point2D.Double viewportUpperLeft)
+    public static Point2D.Double getViewPointFromWorldPoint(Point2D.Double worldPoint, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildWorldToViewTransformation(scaling, viewportUpperLeft);
+        AffineTransform affineTransform = buildWorldToViewTransformation(viewportParameters);
         return applyTransformationToPoint(affineTransform, worldPoint);
     }
 
-    private static AffineTransform buildObjectToWorldTransformation(double rotation, Point2D.Double center)
+    private static AffineTransform buildObjectToWorldTransformation(ObjectParameters objectParameters)
     {
-        AffineTransform affineTransform = buildTranslationTransform(center.x, center.y);
-        affineTransform.concatenate(buildRotationTransform(rotation));
+        AffineTransform affineTransform = buildTranslationTransform(objectParameters.center.x, objectParameters.center.y);
+        affineTransform.concatenate(buildRotationTransform(objectParameters.rotation, false));
         return affineTransform;
     }
 
-    private static AffineTransform buildWorldToObjectTransformation(double rotation, Point2D.Double center)
+    private static AffineTransform buildWorldToObjectTransformation(ObjectParameters objectParameters)
     {
-        AffineTransform affineTransform = buildRotationTransform(-rotation);
-        affineTransform.concatenate(buildTranslationTransform(-center.x, -center.y));
+        AffineTransform affineTransform = buildRotationTransform(objectParameters.rotation, true);
+        affineTransform.concatenate(buildTranslationTransform(-objectParameters.center.x, -objectParameters.center.y));
         return affineTransform;
     }
 
-    private static AffineTransform buildWorldToViewTransformation(double scaling, Point2D.Double viewportUpperLeft)
+    private static AffineTransform buildWorldToViewTransformation(ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildScalingTransform(scaling, scaling);
-        affineTransform.concatenate(buildTranslationTransform(viewportUpperLeft.x, viewportUpperLeft.y));
+        AffineTransform affineTransform = buildScalingTransform(viewportParameters.scalingFactor, viewportParameters.scalingFactor);
+        affineTransform.concatenate(buildTranslationTransform(-viewportParameters.upperLeft.x, -viewportParameters.upperLeft.y));
         return affineTransform;
     }
 
-    private static AffineTransform buildViewToWorldTransformation(double scaling, Point2D.Double viewportUpperLeft)
+    private static AffineTransform buildViewToWorldTransformation(ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildTranslationTransform(-viewportUpperLeft.x, -viewportUpperLeft.y);
-        affineTransform.concatenate(buildScalingTransform(-scaling, -scaling));
+        AffineTransform affineTransform = buildTranslationTransform(viewportParameters.upperLeft.x, viewportParameters.upperLeft.y);
+        affineTransform.concatenate(buildScalingTransform(1.0 / viewportParameters.scalingFactor, 1.0 / viewportParameters.scalingFactor));
         return affineTransform;
     }
 
-    private static AffineTransform buildObjectToViewTransformation(double rotation, Point2D.Double center, double scaling, Point2D.Double viewportUpperLeft)
+    private static AffineTransform buildObjectToViewTransformation(ObjectParameters objectParameters, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildObjectToWorldTransformation(rotation, center);
-        affineTransform.concatenate(buildWorldToViewTransformation(scaling, viewportUpperLeft));
+        //TODO these might need to be swapped.
+        AffineTransform affineTransform = buildWorldToViewTransformation(viewportParameters);
+        affineTransform.concatenate(buildObjectToWorldTransformation(objectParameters));
         return affineTransform;
     }
 
-    private static AffineTransform buildViewToObjectTransformation(double rotation, Point2D.Double center, double scaling, Point2D.Double viewportUpperLeft)
+    private static AffineTransform buildViewToObjectTransformation(ObjectParameters objectParameters, ViewportParameters viewportParameters)
     {
-        AffineTransform affineTransform = buildViewToWorldTransformation(scaling, viewportUpperLeft);
-        affineTransform.concatenate(buildWorldToObjectTransformation(rotation, center));
+        //TODO these might need to be swapped.
+        AffineTransform affineTransform = buildWorldToObjectTransformation(objectParameters);
+        affineTransform.concatenate(buildViewToWorldTransformation(viewportParameters));
         return affineTransform;
     }
 
-    private static AffineTransform buildRotationTransform(double rotation)
+    private static AffineTransform buildRotationTransform(double rotation, boolean isInverse)
     {
         //return AffineTransform.getRotateInstance(rotation);
-        return new AffineTransform(Math.cos(rotation), Math.sin(rotation), -Math.sin(rotation), Math.cos(rotation), 0.0, 0.0);
+        if (!isInverse)
+            return new AffineTransform(Math.cos(rotation), Math.sin(rotation), -Math.sin(rotation), Math.cos(rotation), 0.0, 0.0);
+        else
+            return new AffineTransform(Math.cos(rotation), -Math.sin(rotation), Math.sin(rotation), Math.cos(rotation), 0.0, 0.0);
     }
 
     private static AffineTransform buildTranslationTransform(double x, double y)

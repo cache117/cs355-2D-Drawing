@@ -2,6 +2,7 @@ package cs355.view.drawing;
 
 import cs355.model.drawing.NullShape;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -11,8 +12,18 @@ import java.awt.geom.Point2D;
  */
 public class DrawableNullShape extends DrawableShape
 {
+    public DrawableNullShape()
+    {
+
+    }
+
+    public DrawableNullShape(Color color)
+    {
+        this();
+        setColor(color);
+    }
     @Override
-    protected void drawShape(Graphics2D graphics)
+    protected void drawShape(DrawingParameters drawingParameters)
     {
 
     }
@@ -30,7 +41,7 @@ public class DrawableNullShape extends DrawableShape
     }
 
     @Override
-    public void drawShapeOutline(Graphics2D graphics2D)
+    public void drawShapeOutline(DrawingParameters drawingParameters)
     {
 
     }
@@ -42,7 +53,7 @@ public class DrawableNullShape extends DrawableShape
     }
 
     @Override
-    public void drawOutline(Graphics2D graphics2D)
+    public void drawOutline(DrawingParameters drawingParameters)
     {
 
     }

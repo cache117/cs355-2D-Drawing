@@ -3,6 +3,7 @@ package cs355.view.drawing.state;
 import cs355.GUIFunctions;
 import cs355.model.drawing.*;
 import cs355.model.drawing.Shape;
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.*;
 import cs355.view.drawing.util.DrawableShapeFactory;
 import cs355.view.drawing.util.ShapeUtilities;
@@ -18,12 +19,13 @@ import java.util.List;
 public class SelectionState extends DrawingState
 {
     private boolean isHandleSelected;
-    private Point2D.Double dragStart;
+    private Point2D.Double dragStart, rotateStart;
     private int currentlySelectedShapeIndex;
+    private boolean dragging;
 
     public SelectionState()
     {
-        super(new DrawableNullShape());
+        super();
         setIsShapeSelected(false);
         isHandleSelected = false;
         GUIFunctions.printf("Select a shape to modify.");
@@ -55,6 +57,7 @@ public class SelectionState extends DrawingState
             } else
             {
                 applyDrag(model, point);
+                dragging = true;
             }
         }
     }
@@ -71,7 +74,11 @@ public class SelectionState extends DrawingState
                 isHandleSelected = false;
             } else
             {
-                applyDrag(model, point);
+                if (dragging)
+                {
+                    applyDrag(model, point);
+                    dragging = false;
+                }
             }
         }
     }
@@ -81,10 +88,11 @@ public class SelectionState extends DrawingState
         DrawableShape drawableShape = getDrawableShape();
         //Clone so it doesn't modify the point
         Point2D.Double worldPoint = (Point2D.Double) point.clone();
-        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, drawableShape.getRotation(), drawableShape.getCenterPoint());
+        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getDrawableShape()));
         if (ShapeUtilities.pointInBoundingCircle(objectPoint, getDrawableShape().getHandleCenterPoint(), DrawableShape.HANDLE_RADIUS))
         {
             isHandleSelected = true;
+            this.rotateStart = Transform.getObjectPointFromWorldPoint(point, new ObjectParameters(getDrawableShape()));
         }
     }
 
@@ -103,7 +111,7 @@ public class SelectionState extends DrawingState
                 setDrawableShape(DrawableShapeFactory.createDrawableShape(shape));
                 setIsShapeSelected(true);
                 updateColorFromShape(shape);
-                this.dragStart = Transform.getObjectPointFromWorldPoint(point, shape.getRotation(), shape.getCenter());
+                this.dragStart = Transform.getObjectPointFromWorldPoint(point, new ObjectParameters(getDrawableShape()));
             } else
                 shape.setSelected(false);
 
@@ -139,6 +147,12 @@ public class SelectionState extends DrawingState
         setIsShapeSelected(false);
         currentlySelectedShapeIndex = -1;
         model.notifyObservers();
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableNullShape(color);
     }
 
     @Override
@@ -184,13 +198,13 @@ public class SelectionState extends DrawingState
 
     private double calculateRotation(Point2D.Double objectPoint)
     {
-        return Math.atan2(objectPoint.y, objectPoint.x);
+        return Math.atan2(objectPoint.getY(), objectPoint.getX()) - Math.atan2(rotateStart.getY(), rotateStart.getX());
     }
 
     private void applyRotation(CS355Drawing model, Point2D.Double worldPoint)
     {
         Shape shape = getCurrentShapeFromModel(model);
-        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, shape.getRotation(), shape.getCenter());
+        Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getDrawableShape()));
         double rotation = calculateRotation(objectPoint);
         shape.setRotation(rotation);
         model.notifyObservers();
@@ -201,6 +215,7 @@ public class SelectionState extends DrawingState
         //Get point in object
         //Get the new point's relation to where the center is
         //set center
+        //Point2D.Double dragWorldPoint = Transform.getWorldPointFromObjectPoint(dragStart, getDrawableShape().getRotation(), getDrawableShape().getCenterPoint());
         double newCenterX = worldPoint.x - dragStart.x;
         double newCenterY = worldPoint.y - dragStart.y;
         Shape shape = getCurrentShapeFromModel(model);

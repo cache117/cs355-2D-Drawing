@@ -1,5 +1,6 @@
 package cs355.model.drawing;
 
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
@@ -67,7 +68,7 @@ public class Square extends Shape
         if (getRotation() == NO_ROTATION)
             return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getSize(), getSize());
         else
-            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), new Point2D.Double(0, 0), getSize(), getSize());
+            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), new Point2D.Double(0, 0), getSize(), getSize());
     }
 
     @Override

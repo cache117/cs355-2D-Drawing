@@ -1,5 +1,6 @@
 package cs355.model.drawing;
 
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.ShapeUtilities;
 import cs355.view.drawing.util.Transform;
 
@@ -99,7 +100,7 @@ public class Rectangle extends Shape
             } else
             {*/
             //Check in more depth
-            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, getRotation(), getCenter()), new Point2D.Double(0, 0), getWidth(), getHeight());
+            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), new Point2D.Double(0, 0), getWidth(), getHeight());
             //}
         }
     }

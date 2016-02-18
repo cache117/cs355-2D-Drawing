@@ -1,5 +1,6 @@
 package cs355.view.drawing.state;
 
+import cs355.view.drawing.DrawableShape;
 import cs355.view.drawing.DrawableSquare;
 
 import java.awt.*;
@@ -9,8 +10,14 @@ import java.awt.*;
  */
 public class SquareState extends RectangularState
 {
-    public SquareState(Color color)
+    public SquareState(DrawingState currentState)
     {
-        super(new DrawableSquare(color));
+        super(currentState);
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableSquare(color);
     }
 }

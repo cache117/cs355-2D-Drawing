@@ -7,6 +7,8 @@ import java.awt.geom.Point2D;
 import cs355.model.drawing.CS355Drawing;
 import cs355.model.drawing.DrawingModel;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
+import cs355.view.ObjectParameters;
 import cs355.view.drawing.util.Transform;
 
 /**
@@ -46,14 +48,14 @@ public abstract class DrawableShape
         this.rotation = rotation;
     }
 
-    public void draw(Graphics2D graphics2D)
+    public void draw(DrawingParameters drawingParameters)
     {
-        graphics2D.setColor(getColor());
-        this.applyTransformationToGraphics(graphics2D);
-        this.drawShape(graphics2D);
+        drawingParameters.graphics2D.setColor(getColor());
+        this.applyTransformationToGraphics(drawingParameters);
+        this.drawShape(drawingParameters);
     }
 
-    protected abstract void drawShape(Graphics2D graphics);
+    protected abstract void drawShape(DrawingParameters drawingParameters);
 
     /**
      * Sets the beginning and end points from the given shape.
@@ -160,12 +162,12 @@ public abstract class DrawableShape
         ((DrawingModel) model).setShape(0, this.getModelShape());
     }
 
-    public void drawOutline(Graphics2D graphics2D)
+    public void drawOutline(DrawingParameters drawingParameters)
     {
-        graphics2D.setColor(Color.RED);
-        this.applyTransformationToGraphics(graphics2D);
-        this.drawShapeOutline(graphics2D);
-        this.drawShapeHandle(graphics2D);
+        drawingParameters.graphics2D.setColor(Color.RED);
+        this.applyTransformationToGraphics(drawingParameters);
+        this.drawShapeOutline(drawingParameters);
+        this.drawShapeHandle(drawingParameters.graphics2D);
     }
 
     protected void drawShapeHandle(Graphics2D graphics2D)
@@ -174,11 +176,11 @@ public abstract class DrawableShape
         graphics2D.drawOval((int) handleCenter.x - HANDLE_RADIUS, (int) handleCenter.y - HANDLE_RADIUS, HANDLE_DIAMETER, HANDLE_DIAMETER);
     }
 
-    protected abstract void drawShapeOutline(Graphics2D graphics2D);
+    protected abstract void drawShapeOutline(DrawingParameters drawingParameters);
 
-    protected void applyTransformationToGraphics(Graphics2D graphics2D)
+    protected void applyTransformationToGraphics(DrawingParameters drawingParameters)
     {
-        Transform.applyTransformationToGraphics(graphics2D, rotation, centerPoint);
+        Transform.applyTransformationToGraphics(drawingParameters, new ObjectParameters(centerPoint, rotation));
     }
 
     public abstract Point2D.Double getHandleCenterPoint();

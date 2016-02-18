@@ -1,12 +1,11 @@
 package cs355.view.drawing;
 
 import cs355.GUIFunctions;
-import cs355.model.drawing.Ellipse;
 import cs355.model.drawing.Rectangle;
 import cs355.model.drawing.Shape;
+import cs355.view.DrawingParameters;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
 /**
@@ -31,19 +30,19 @@ public class DrawableRectangle extends DrawableShape
     }
 
     @Override
-    public void drawShape(Graphics2D graphics)
+    public void drawShape(DrawingParameters drawingParameters)
     {
         /*
         Point2D.Double upperLeft = calculateUpperLeftPoint();
         graphics.fillRect((int) upperLeft.getX(), (int) upperLeft.getY(), (int) getWidth(), (int) getHeight());
         */
-        graphics.fillRect((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
+        drawingParameters.graphics2D.fillRect((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
     }
 
     @Override
-    public void drawShapeOutline(Graphics2D graphics2D)
+    public void drawShapeOutline(DrawingParameters drawingParameters)
     {
-        graphics2D.drawRect((int) (-getWidth() / 2) - 2, (int) (-getHeight() / 2) - 2, (int) getWidth() + 3, (int) getHeight() + 3);
+        drawingParameters.graphics2D.drawRect((int) (-getWidth() / 2) - 2, (int) (-getHeight() / 2) - 2, (int) getWidth() + 3, (int) getHeight() + 3);
         GUIFunctions.printf("Drawing outline");
     }
 

@@ -83,25 +83,25 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void zoomInButtonHit()
     {
-        state.zoomInButtonHit();
+        state.zoomInButtonHit(view);
     }
 
     @Override
     public void zoomOutButtonHit()
     {
-        state.zoomOutButtonHit();
+        state.zoomOutButtonHit(view);
     }
 
     @Override
     public void hScrollbarChanged(int value)
     {
-        state.hScrollbarChanged(value);
+        state.hScrollbarChanged(value, view);
     }
 
     @Override
     public void vScrollbarChanged(int value)
     {
-        state.vScrollbarChanged(value);
+        state.vScrollbarChanged(value, view);
     }
 
     @Override

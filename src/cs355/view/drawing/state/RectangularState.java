@@ -13,14 +13,9 @@ import java.awt.geom.Point2D;
  */
 public class RectangularState extends DrawingState
 {
-    public RectangularState(Color color)
+    public RectangularState(DrawingState currentState)
     {
-        this(new DrawableRectangle(color));
-    }
-
-    protected RectangularState(DrawableShape shape)
-    {
-        super(shape);
+        super(currentState);
     }
 
     @Override
@@ -61,5 +56,11 @@ public class RectangularState extends DrawingState
         DrawableShape drawableShape = getDrawableShape();
         drawableShape.setNumberOfActualPoints(2);
         drawableShape.updateEndPoint(point, model);
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableRectangle(color);
     }
 }

@@ -1,6 +1,7 @@
 package cs355.view.drawing.state;
 
 import cs355.view.drawing.DrawableCircle;
+import cs355.view.drawing.DrawableShape;
 
 import java.awt.*;
 
@@ -9,8 +10,14 @@ import java.awt.*;
  */
 public class CircleState extends EllipseState
 {
-    public CircleState(Color color)
+    public CircleState(DrawingState currentState)
     {
-        super(new DrawableCircle(color));
+        super(currentState);
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableCircle(color);
     }
 }

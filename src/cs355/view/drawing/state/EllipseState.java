@@ -10,13 +10,14 @@ import java.awt.*;
  */
 public class EllipseState extends RectangularState
 {
-    protected EllipseState(DrawableShape shape)
+    public EllipseState(DrawingState currentState)
     {
-        super(shape);
+        super(currentState);
     }
 
-    public EllipseState(Color color)
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
     {
-        this(new DrawableEllipse(color));
+        return new DrawableEllipse(color);
     }
 }

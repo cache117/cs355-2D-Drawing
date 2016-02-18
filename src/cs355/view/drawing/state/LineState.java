@@ -13,9 +13,9 @@ import java.awt.geom.Point2D;
  */
 public class LineState extends DrawingState
 {
-    public LineState(Color color)
+    public LineState(DrawingState currentState)
     {
-        super(new DrawableLine(color));
+        super(currentState);
     }
 
     @Override
@@ -55,5 +55,11 @@ public class LineState extends DrawingState
         DrawableShape drawableShape = getDrawableShape();
         drawableShape.updateEndPoint(point, model);
         drawableShape.setNumberOfActualPoints(2);
+    }
+
+    @Override
+    public DrawableShape buildDrawableShape(Color color)
+    {
+        return new DrawableLine(color);
     }
 }
