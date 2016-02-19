@@ -20,19 +20,19 @@ public abstract class DrawableShape
     /* Every shape (except for Triangle) uses two points to draw, independent of how they are drawn */
     private Point2D.Double startPoint, endPoint, centerPoint;
     private Color color;
-    private int numberOfActualPoints;
     private double rotation;
+    private int numberOfActualPoints;
 
-    public DrawableShape()
+    DrawableShape()
     {
-        numberOfActualPoints = 0;
+
     }
 
+    @SuppressWarnings("WeakerAccess")
     public DrawableShape(Shape shape)
     {
         this(shape.getColor(), shape.getCenter(), shape.getRotation());
         this.calculatePointsFromShape(shape);
-        this.setNumberOfActualPoints(getExpectedPoints());
     }
 
     public DrawableShape(Color color)
@@ -57,6 +57,27 @@ public abstract class DrawableShape
 
     protected abstract void drawShape(DrawingParameters drawingParameters);
 
+    public void drawOutline(DrawingParameters drawingParameters)
+    {
+        drawingParameters.graphics2D.setColor(Color.RED);
+        this.applyTransformationToGraphics(drawingParameters);
+        this.drawShapeOutline(drawingParameters);
+        this.drawShapeHandle(drawingParameters.graphics2D); //TODO this might need to take the whole drawing params.
+    }
+
+    void drawShapeHandle(Graphics2D graphics2D)
+    {
+        Point2D.Double handleCenter = getHandleCenterPoint();
+        graphics2D.drawOval((int) (handleCenter.x - HANDLE_RADIUS), (int) (handleCenter.y - HANDLE_RADIUS), HANDLE_DIAMETER, HANDLE_DIAMETER);
+    }
+
+    protected abstract void drawShapeOutline(DrawingParameters drawingParameters);
+
+    void applyTransformationToGraphics(DrawingParameters drawingParameters)
+    {
+        Transform.applyTransformationToGraphics(drawingParameters, new ObjectParameters(centerPoint, rotation));
+    }
+
     /**
      * Sets the beginning and end points from the given shape.
      *
@@ -67,7 +88,7 @@ public abstract class DrawableShape
     /**
      * The number of points that must be in the DrawableShape before drawing.
      *
-     * @return the number of points that must be in the DrawableShape before drawing
+     * @return the number of points that must be in the DrawableShape before drawing.
      */
     protected int getExpectedPoints()
     {
@@ -81,7 +102,6 @@ public abstract class DrawableShape
     {
         startPoint = null;
         endPoint = null;
-        numberOfActualPoints = 0;
     }
 
     /**
@@ -91,7 +111,7 @@ public abstract class DrawableShape
      */
     public abstract Shape getModelShape();
 
-    protected Point2D.Double getStartPoint()
+    Point2D.Double getStartPoint()
     {
         return startPoint;
     }
@@ -101,7 +121,7 @@ public abstract class DrawableShape
         this.startPoint = startPoint;
     }
 
-    protected Point2D.Double getEndPoint()
+    Point2D.Double getEndPoint()
     {
         return endPoint;
     }
@@ -116,24 +136,9 @@ public abstract class DrawableShape
         return centerPoint;
     }
 
-    public void setCenterPoint(Point2D.Double centerPoint)
+    void setCenterPoint(Point2D.Double centerPoint)
     {
         this.centerPoint = centerPoint;
-    }
-
-    public int getNumberOfActualPoints()
-    {
-        return numberOfActualPoints;
-    }
-
-    public void setNumberOfActualPoints(int number)
-    {
-        numberOfActualPoints = number;
-    }
-
-    protected void incrementNumberOfActualPoints()
-    {
-        numberOfActualPoints++;
     }
 
     public Color getColor()
@@ -162,26 +167,15 @@ public abstract class DrawableShape
         ((DrawingModel) model).setShape(0, this.getModelShape());
     }
 
-    public void drawOutline(DrawingParameters drawingParameters)
-    {
-        drawingParameters.graphics2D.setColor(Color.RED);
-        this.applyTransformationToGraphics(drawingParameters);
-        this.drawShapeOutline(drawingParameters);
-        this.drawShapeHandle(drawingParameters.graphics2D);
-    }
-
-    protected void drawShapeHandle(Graphics2D graphics2D)
-    {
-        Point2D.Double handleCenter = getHandleCenterPoint();
-        graphics2D.drawOval((int) handleCenter.x - HANDLE_RADIUS, (int) handleCenter.y - HANDLE_RADIUS, HANDLE_DIAMETER, HANDLE_DIAMETER);
-    }
-
-    protected abstract void drawShapeOutline(DrawingParameters drawingParameters);
-
-    protected void applyTransformationToGraphics(DrawingParameters drawingParameters)
-    {
-        Transform.applyTransformationToGraphics(drawingParameters, new ObjectParameters(centerPoint, rotation));
-    }
-
     public abstract Point2D.Double getHandleCenterPoint();
+
+    public void setNumberOfActualPoints(int numberOfActualPoints)
+    {
+        this.numberOfActualPoints = numberOfActualPoints;
+    }
+
+    public int getNumberOfActualPoints()
+    {
+        return numberOfActualPoints;
+    }
 }

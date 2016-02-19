@@ -104,7 +104,7 @@ public class Ellipse extends Shape
             {
                 if (ShapeUtilities.pointInBoundingCircle(worldPoint, getCenter(), getLargerRadius() / 2))
                 {
-                    Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation));
+                    Point2D.Double objectPoint = Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getCenter(), getRotation()));
                     return ShapeUtilities.pointInEllipse(objectPoint, new Point2D.Double(0, 0), width / 2, height / 2);
                 } else
                     return false;

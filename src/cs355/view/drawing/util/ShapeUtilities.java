@@ -3,10 +3,18 @@ package cs355.view.drawing.util;
 import java.awt.geom.Point2D;
 
 /**
- * Created by cstaheli on 1/20/2016.
+ * Utilities to make Shape selecting and drawing easier.
  */
 public class ShapeUtilities
 {
+    /**
+     * Calculates the symmetric point that is closest to the dragged to point. This method tries to make the shape's edges
+     * draw as close to the mouse as possible.
+     *
+     * @param startPoint   the starting point of the shape.
+     * @param draggedPoint the end point of the shape.
+     * @return the end point that makes the shape symmetric.
+     */
     public static Point2D.Double calculateSymmetricPoint(Point2D.Double startPoint, Point2D.Double draggedPoint)
     {
         int startX = (int) startPoint.x;
@@ -111,7 +119,7 @@ public class ShapeUtilities
     }
 
     /**
-     * Checks whether or not a point is in an ellipse
+     * Checks whether or not a point is in an ellipse.
      *
      * @param point   the point.
      * @param center  the center of the ellipse
@@ -124,6 +132,16 @@ public class ShapeUtilities
         return (Math.pow(((point.x - center.x) / xRadius), 2) + Math.pow(((point.y - center.y) / yRadius), 2) <= 1);
     }
 
+    /**
+     * Checks whether the given point is in a triangle by using the dot product of vectors of each side of the triangle.
+     *
+     * @param point the point.
+     * @param a     one of the vertices of the triangle.
+     * @param b     one of the vertices of the triangle.
+     * @param c     one of the vertices of the triangle.
+     * @return true if the point is in the triangle.
+     * @see Vector
+     */
     public static boolean pointInTriangle(Point2D.Double point, Point2D.Double a, Point2D.Double b, Point2D.Double c)
     {
         Vector q = new Vector(point);
@@ -138,6 +156,15 @@ public class ShapeUtilities
         return allSameSign(firstDotProduct, secondDotProduct, thirdDotProduct);
     }
 
+    /**
+     * Checks to see if the point is close enough to the line segment.
+     *
+     * @param point     the point.
+     * @param lineStart the start of the line.
+     * @param lineEnd   the end of the line.
+     * @param tolerance how much tolerance to each side of the line to check in.
+     * @return true if the point is close enough to the line, based on the tolerance.
+     */
     public static boolean pointCloseEnoughToLine(Point2D.Double point, Point2D.Double lineStart, Point2D.Double lineEnd, double tolerance)
     {
         //q' = q + (d - q * n^)*n^
@@ -164,7 +191,7 @@ public class ShapeUtilities
 
         Point2D.Double q = new Point2D.Double((startX + t*dHat.getX()), (startY + t*dHat.getY()));	//q = p0 + t * dHat
 
-        double distance = Math.sqrt(Math.pow((q.getX()-x), 2) + Math.pow((q.getY()-y), 2));	//distance to line -> pythagorian
+        double distance = Math.sqrt(Math.pow((q.getX()-x), 2) + Math.pow((q.getY()-y), 2));	//distance to line -> pythagorean
 
         return distance <= 4;
 
@@ -190,9 +217,6 @@ public class ShapeUtilities
 
     private static boolean allSameSign(double first, double second, double third)
     {
-        if (first > 0)
-            return second > 0 && third > 0;
-        else
-            return first < 0 && second < 0 && third < 0;
+        return (first > 0 && second > 0 && third > 0) || (first < 0 && second < 0 && third < 0);
     }
 }

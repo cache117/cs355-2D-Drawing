@@ -100,7 +100,7 @@ public class Rectangle extends Shape
             } else
             {*/
             //Check in more depth
-            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), new Point2D.Double(0, 0), getWidth(), getHeight());
+            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getCenter(), getRotation())), new Point2D.Double(0, 0), getWidth(), getHeight());
             //}
         }
     }

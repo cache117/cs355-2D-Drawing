@@ -19,27 +19,21 @@ public abstract class DrawingState
 {
     private DrawableShape drawableShape;
     private boolean shapeSelected;
-    private Point2D.Double viewportUpperLeft;
-    private double scalingFactor;
 
-    private int hBarPosition;
-    private int vBarPosition;
-    private static final int VIEW_SIZE = 512, WORLD_SIZE = 2048;
 
-    protected DrawingState()
+    /**
+     * Creates a default DrawingState
+     */
+    DrawingState()
     {
         shapeSelected = false;
-        scalingFactor = 1.0;
         drawableShape = new DrawableNullShape(Color.WHITE);
-        viewportUpperLeft = new Point2D.Double(0,0);
     }
 
-    public DrawingState(DrawingState currentState)
+    DrawingState(DrawingState currentState)
     {
         this();
         this.drawableShape = buildDrawableShape(drawableShape.getColor());
-        this.viewportUpperLeft = currentState.viewportUpperLeft;
-        this.scalingFactor = currentState.scalingFactor;
     }
 
     public void lineButtonHit(DrawingController controller)
@@ -109,56 +103,7 @@ public abstract class DrawingState
 
     }
 
-    public void zoomInButtonHit(ViewRefresher view)
-    {
-        if (scalingFactor < 4.0)
-            scalingFactor *= 2.0;
-        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
-        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x + (VIEW_SIZE /scalingFactor), oldUpperLeft.y + (VIEW_SIZE /scalingFactor));
-        updateViewport(view);
-        doZoom();
-    }
 
-    public void zoomOutButtonHit(ViewRefresher view)
-    {
-        if (scalingFactor > .25)
-            scalingFactor /= 2.0;
-        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
-        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x - (VIEW_SIZE /scalingFactor), oldUpperLeft.y - (VIEW_SIZE /scalingFactor));
-        updateViewport(view);
-        doZoom();
-    }
-
-    public void hScrollbarChanged(int value, ViewRefresher view)
-    {
-        viewportUpperLeft.x = value;
-        updateViewport(view);
-    }
-
-    public void vScrollbarChanged(int value, ViewRefresher view)
-    {
-        viewportUpperLeft.y = value;
-        updateViewport(view);
-    }
-
-    private void updateViewport(ViewRefresher view)
-    {
-        ((DrawingViewer) view).setViewportParameters(new ViewportParameters(viewportUpperLeft, scalingFactor));
-    }
-
-    private void doZoom()
-    {
-        GUIFunctions.setZoomText(scalingFactor);
-        int hBarSize = (int) (VIEW_SIZE / scalingFactor);
-        GUIFunctions.setHScrollBarKnob(hBarSize);
-        GUIFunctions.setHScrollBarPosit((int) viewportUpperLeft.x);
-
-        int vBarSize = (int) (VIEW_SIZE / scalingFactor);
-        GUIFunctions.setVScrollBarKnob(vBarSize);
-        GUIFunctions.setVScrollBarPosit((int) viewportUpperLeft.y);
-
-        GUIFunctions.refresh();
-    }
 
     /**
      * Changes the shape that can be stored in the model after clicking a mouseClicked event.
@@ -224,39 +169,7 @@ public abstract class DrawingState
 
     protected void stateChanged(CS355Drawing model)
     {
-
     }
 
-    public void setScalingFactor(double scalingFactor)
-    {
-        this.scalingFactor = scalingFactor;
-    }
-
-    public void setViewportUpperLeft(Point2D.Double viewportUpperLeft)
-    {
-        this.viewportUpperLeft = viewportUpperLeft;
-    }
-
-    public abstract DrawableShape buildDrawableShape(Color color);
-
-    public int getHBarPosition()
-    {
-        return hBarPosition;
-    }
-
-    public void setHBarPosition(int hBarPosition)
-    {
-        this.hBarPosition = hBarPosition;
-
-    }
-
-    public int getVBarPosition()
-    {
-        return vBarPosition;
-    }
-
-    public void setVBarPosition(int vBarPosition)
-    {
-        this.vBarPosition = vBarPosition;
-    }
+    protected abstract DrawableShape buildDrawableShape(Color color);
 }

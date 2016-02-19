@@ -49,6 +49,7 @@ public class DrawableTriangle extends DrawableShape
         setStartPoint(Transform.getWorldPointFromObjectPoint(triangle.getA(), new ObjectParameters(getCenterPoint(), getRotation())));
         setMiddlePoint(Transform.getWorldPointFromObjectPoint(triangle.getB(), new ObjectParameters(getCenterPoint(), getRotation())));
         setEndPoint(Transform.getWorldPointFromObjectPoint(triangle.getC(), new ObjectParameters(getCenterPoint(), getRotation())));
+        setNumberOfActualPoints(3);
 
 //        setStartPoint(triangle.getA());
 //        setMiddlePoint(triangle.getB());
@@ -75,7 +76,7 @@ public class DrawableTriangle extends DrawableShape
         return triangle;
     }
 
-    double getAveragePoint(double p1, double p2, double p3)
+    private double getAveragePoint(double p1, double p2, double p3)
     {
         return (p1 + p2 + p3) / 3;
     }
@@ -107,7 +108,6 @@ public class DrawableTriangle extends DrawableShape
                 break;
             case 2:
                 setEndPoint(point);
-                setNumberOfActualPoints(3);
                 setCenterPoint(calculateCenterPoint());
 
                 model.addShape(getModelShape());

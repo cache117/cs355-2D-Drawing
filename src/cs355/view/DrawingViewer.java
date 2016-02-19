@@ -9,6 +9,7 @@ import cs355.view.drawing.DrawableShape;
 import cs355.view.drawing.util.DrawableShapeFactory;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,12 +27,22 @@ public class DrawingViewer implements ViewRefresher
     private static final Logger LOGGER = Logger.getLogger(DrawingViewer.class.getName());
 
     private DrawingModel model;
-    private ViewportParameters viewportParameters;
+
+    private Point2D.Double viewportUpperLeft;
+    private double scalingFactor;
+    private int hBarPosition;
+    private int vBarPosition;
+    private static final double VIEWPORT_SIZE = 512, HALF_WORLD_SIZE = 1024, MAX_SCALING_FACTOR = 4, MIN_SCALING_FACTOR = .25;
     // private List<Shape> specificUpdatedShapes;
 
+    /**
+     * Creates a new Viewer.
+     */
     public DrawingViewer()
     {
         model = new DrawingModel();
+        scalingFactor = 1.0;
+        viewportUpperLeft = new Point2D.Double(HALF_WORLD_SIZE, HALF_WORLD_SIZE);
     }
 
     /* begin ViewRefresher methods */
@@ -41,8 +52,8 @@ public class DrawingViewer implements ViewRefresher
         //Draw selection handles last
         List<Shape> shapes = model.getShapesReversed();
 
-        DrawableShape selectedShape = new DrawableNullShape();
-        DrawingParameters drawingParameters = new DrawingParameters(graphics2D, viewportParameters);
+        DrawableShape selectedShape = new DrawableNullShape(Color.WHITE);
+        DrawingParameters drawingParameters = new DrawingParameters(graphics2D, new ViewportParameters(viewportUpperLeft, scalingFactor));
         for (Shape shape : shapes)
         {
             DrawableShape drawableShape = DrawableShapeFactory.createDrawableShape(shape);
@@ -66,8 +77,61 @@ public class DrawingViewer implements ViewRefresher
     }
     /* end Observer methods */
 
-    public void setViewportParameters(ViewportParameters viewportParameters)
+    public void zoomInButtonHit()
     {
-        this.viewportParameters = viewportParameters;
+        if (scalingFactor < MAX_SCALING_FACTOR)
+            scalingFactor *= 2.0;
+        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
+        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x + (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y + (VIEWPORT_SIZE / scalingFactor));
+        doZoom();
+    }
+
+    public void zoomOutButtonHit()
+    {
+        if (scalingFactor > MIN_SCALING_FACTOR)
+            scalingFactor /= 2.0;
+        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
+        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x - (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y - (VIEWPORT_SIZE / scalingFactor));
+        doZoom();
+    }
+
+    public void hScrollbarChanged(int value)
+    {
+        if (value != 0)
+            viewportUpperLeft.x = value;
+        GUIFunctions.printf("hScroll: %d", value);
+        GUIFunctions.refresh();
+    }
+
+    public void vScrollbarChanged(int value)
+    {
+        if (value != 0)
+            viewportUpperLeft.y = value;
+        GUIFunctions.printf("vScroll: %d", value);
+        GUIFunctions.refresh();
+    }
+
+    private void doZoom()
+    {
+        GUIFunctions.setZoomText(scalingFactor);
+        int hBarSize = (int) (VIEWPORT_SIZE / scalingFactor);
+        GUIFunctions.setHScrollBarKnob(hBarSize);
+        GUIFunctions.setHScrollBarPosit((int) viewportUpperLeft.x);
+
+        int vBarSize = (int) (VIEWPORT_SIZE / scalingFactor);
+        GUIFunctions.setVScrollBarKnob(vBarSize);
+        GUIFunctions.setVScrollBarPosit((int) viewportUpperLeft.y);
+
+        GUIFunctions.refresh();
+    }
+
+    public Point2D.Double getViewportUpperLeft()
+    {
+        return viewportUpperLeft;
+    }
+
+    public double getScalingFactor()
+    {
+        return scalingFactor;
     }
 }

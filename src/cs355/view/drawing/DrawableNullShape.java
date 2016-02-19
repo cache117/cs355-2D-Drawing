@@ -12,15 +12,13 @@ import java.awt.geom.Point2D;
  */
 public class DrawableNullShape extends DrawableShape
 {
-    public DrawableNullShape()
-    {
-
-    }
-
+    /**
+     * Creates a DrawableShape that does nothing. Avoids Null pointers.
+     * @param color the color of the shape.
+     */
     public DrawableNullShape(Color color)
     {
-        this();
-        setColor(color);
+        super(color);
     }
     @Override
     protected void drawShape(DrawingParameters drawingParameters)

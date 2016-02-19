@@ -22,6 +22,20 @@ public class CS355
         controller.setView(new DrawingViewer());
         // Fill in the parameters below with your controller and view.
         GUIFunctions.createCS355Frame(controller, controller.getView());
+        init();
+    }
+
+    @SuppressWarnings("FeatureEnvy")
+    private static void init()
+    {
+        final int VIEWPORT_SIZE = 512, BAR_INIT_POSITION = 1024;
+        GUIFunctions.setZoomText(1);
+
+        GUIFunctions.setHScrollBarKnob(VIEWPORT_SIZE);
+        GUIFunctions.setHScrollBarPosit(BAR_INIT_POSITION - (VIEWPORT_SIZE / 2));
+
+        GUIFunctions.setVScrollBarKnob(VIEWPORT_SIZE);
+        GUIFunctions.setVScrollBarPosit(BAR_INIT_POSITION - (VIEWPORT_SIZE / 2));
 
         GUIFunctions.refresh();
     }

@@ -64,7 +64,7 @@ public class Line extends Shape
     @Override
     public boolean pointInShape(Point2D.Double worldPoint)
     {
-        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), getCenter(), getEnd(), getTolerance());
+        return ShapeUtilities.pointCloseEnoughToLine(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getCenter(), getRotation())), getCenter(), getEnd(), getTolerance());
     }
 
     private double getTolerance()

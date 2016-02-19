@@ -7,14 +7,20 @@ import java.awt.geom.Point2D;
  */
 public class Vector
 {
-    private double x, y;
+    private final double x;
+    private final double y;
 
-    public Vector(double x, double y)
+    private Vector(double x, double y)
     {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Initializes a Vector from a 2D point.
+     *
+     * @param point the point to represent as a Vector.
+     */
     public Vector(Point2D.Double point)
     {
         this(point.x, point.y);
@@ -35,7 +41,7 @@ public class Vector
      * Subtracts the given Vector from this Vector
      *
      * @param vector the Vector to subtract
-     * @return this Vector after the subtraction operation.
+     * @return the result of the subtraction operation.
      */
     public Vector subtract(Vector vector)
     {
@@ -44,6 +50,12 @@ public class Vector
         return new Vector(x, y);
     }
 
+    /**
+     * Adds the given Vector to this Vector.
+     *
+     * @param vector the Vector to add.
+     * @return the result of the addition operation.
+     */
     public Vector add(Vector vector)
     {
         double x = this.x + vector.x;
@@ -51,6 +63,12 @@ public class Vector
         return new Vector(x, y);
     }
 
+    /**
+     * Returns a Vector that represents the orthogonal version of this Vector.
+     *
+     * @return the orthogonal version of this Vector.
+     */
+    @SuppressWarnings("SuspiciousNameCombination")
     public Vector orthogonalize()
     {
         double x = -y;
@@ -58,16 +76,34 @@ public class Vector
         return new Vector(x, y);
     }
 
+    /**
+     * Gets the length of the vector from the origin. This is equivalent to calling length(new Vector(0, 0);
+     *
+     * @return the length of the vector from the origin.
+     */
     public double length()
     {
-        return length(new Vector(0,0));
+        return length(new Vector(0, 0));
     }
 
+    /**
+     * The length or distance of the Vector from the given vector.
+     *
+     * @param start the other vector.
+     * @return the length or distance between two vectors.
+     */
     public double length(Vector start)
     {
         return Math.sqrt(square(this.x - start.x) + square(this.y - start.y));
     }
 
+    /**
+     * Calculates the normal of two Vectors.
+     *
+     * @param p1 the first Vector.
+     * @param p2 the second Vector.
+     * @return tje normal of the two Vectors.
+     */
     public static Vector calculateNormal(Vector p1, Vector p2)
     {
         Vector vectorDifference = p2.subtract(p1);
@@ -82,6 +118,12 @@ public class Vector
         return Math.pow(number, 2);
     }
 
+    /**
+     * Scales the Vector by the given constant.
+     *
+     * @param scalingAmount the amount to scale by.
+     * @return the Vector after the scaling operation.
+     */
     public Vector applyScaling(double scalingAmount)
     {
         double x = this.x * scalingAmount;

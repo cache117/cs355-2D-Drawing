@@ -12,18 +12,20 @@ import java.awt.geom.Point2D;
  */
 public class DrawableEllipse extends DrawableRectangle
 {
-    private Ellipse ellipse;
-
-    protected DrawableEllipse()
-    {
-        super();
-    }
-
+    /**
+     * Creates a DrawableEllipse from an Ellipse.
+     * @param ellipse the Ellipse.
+     */
+    @SuppressWarnings("WeakerAccess")
     public DrawableEllipse(Shape ellipse)
     {
         super(ellipse);
     }
 
+    /**
+     * Creates a basic DrawableEllipse from a color.
+     * @param color the color.
+     */
     public DrawableEllipse(Color color)
     {
         super(color);
@@ -33,7 +35,7 @@ public class DrawableEllipse extends DrawableRectangle
     public void drawShape(DrawingParameters drawingParameters)
     {
         //Point2D.Double upperLeftPoint = calculateUpperLeftPoint();
-        drawingParameters.graphics2D.fillOval((int) -getWidth() / 2, (int) -getHeight() / 2, (int) getWidth(), (int) getHeight());
+        drawingParameters.graphics2D.fillOval((int) (-getWidth() /  2.0), (int) (-getHeight() / 2.0), (int) getWidth(), (int) getHeight());
     }
 
     @Override
@@ -44,7 +46,14 @@ public class DrawableEllipse extends DrawableRectangle
         setEndPoint(calculateLowerRightFromCenter(ellipse.getCenter(), ellipse.getWidth(), ellipse.getHeight()));
     }
 
-    protected Point2D.Double calculateLowerRightFromCenter(Point2D.Double center, double width, double height)
+    /**
+     * Calculates the lower right point of the ellipse from the center, width, and height.
+     * @param center the center of the ellipse.
+     * @param width the width of the ellipse.
+     * @param height the height of the ellipse.
+     * @return the lower right point of the ellipse.
+     */
+    Point2D.Double calculateLowerRightFromCenter(Point2D.Double center, double width, double height)
     {
         double x = (center.x + (width / 2.0));
         double y = (center.y + (height / 2.0));

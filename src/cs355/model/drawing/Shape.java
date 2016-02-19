@@ -9,15 +9,15 @@ import java.awt.geom.Point2D;
  */
 public abstract class Shape
 {
-    protected static final double NO_ROTATION = 0.0;
+    static final double NO_ROTATION = 0.0;
     // The color of this shape.
-    protected Color color;
+    private Color color;
 
     // The center of this shape.
-    protected Point2D.Double center, oldCenter;
+    private Point2D.Double center;
 
     // The rotation of this shape.
-    protected double rotation, oldRotation;
+    private double rotation;
 
     private boolean selected;
 
@@ -93,7 +93,6 @@ public abstract class Shape
      */
     public void setRotation(double rotation)
     {
-        this.oldRotation = this.rotation;
         this.rotation = rotation;
     }
 
@@ -124,23 +123,9 @@ public abstract class Shape
             return false;
 
         Shape shape = (Shape) o;
-//        if (!rotationSimilar(shape.rotation))
-//            return false;
-//        if (!centerSimilar(shape.center))
-//            return false;
         if (!color.equals(shape.color))
             return false;
         return true;
-    }
-
-    private boolean rotationSimilar(double rotation)
-    {
-        return (this.rotation == rotation) || (this.oldRotation == rotation);
-    }
-
-    private boolean centerSimilar(Point2D.Double center)
-    {
-        return (this.center.equals(center)) || (this.oldCenter.equals(center));
     }
 
     @Override

@@ -2,9 +2,13 @@ package cs355.controller;
 
 import cs355.GUIFunctions;
 import cs355.model.drawing.*;
+import cs355.view.DrawingViewer;
 import cs355.view.ViewRefresher;
+import cs355.view.ViewportParameters;
 import cs355.view.drawing.state.DrawingState;
 import cs355.view.drawing.state.InitialState;
+import cs355.view.drawing.util.Transform;
+import org.omg.CORBA.TRANSACTION_MODE;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,7 +24,7 @@ import java.util.*;
 public class DrawingController implements CS355Controller, MouseListener, MouseMotionListener
 {
     private ViewRefresher view;
-    private CS355Drawing model;
+    private final CS355Drawing model;
     private DrawingState state;
 
     public DrawingController()
@@ -83,25 +87,25 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void zoomInButtonHit()
     {
-        state.zoomInButtonHit(view);
+        ((DrawingViewer) view).zoomInButtonHit();
     }
 
     @Override
     public void zoomOutButtonHit()
     {
-        state.zoomOutButtonHit(view);
+        ((DrawingViewer) view).zoomOutButtonHit();
     }
 
     @Override
     public void hScrollbarChanged(int value)
     {
-        state.hScrollbarChanged(value, view);
+        ((DrawingViewer) view).hScrollbarChanged(value);
     }
 
     @Override
     public void vScrollbarChanged(int value)
     {
-        state.vScrollbarChanged(value, view);
+        ((DrawingViewer) view).vScrollbarChanged(value);
     }
 
     @Override
@@ -231,39 +235,42 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Clicked: %s", point.toString());
-        state.mouseClicked(point, model);
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        Point2D.Double worldPoint = getWorldPointFromViewPoint(viewPoint);
+        printRelativePoints("Mouse Clicked: W:(%d,%d), V:(%d,%d)", worldPoint, viewPoint);
+        state.mouseClicked(worldPoint, model);
     }
 
     @Override
     public void mousePressed(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Pressed: %s", point.toString());
-        state.mousePressed(point, model);
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        Point2D.Double worldPoint = getWorldPointFromViewPoint(viewPoint);
+        printRelativePoints("Mouse Pressed: W:(%d,%d), V:(%d,%d)", worldPoint, viewPoint);
+        state.mousePressed(worldPoint, model);
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Released: %s", point.toString());
-        state.mouseReleased(point, model);
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        Point2D.Double worldPoint = getWorldPointFromViewPoint(viewPoint);
+        printRelativePoints("Mouse Released: W:(%d,%d), V:(%d,%d)", worldPoint, viewPoint);
+        state.mouseReleased(worldPoint, model);
     }
 
     @Override
     public void mouseEntered(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Entered: %s", point.toString());
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        //GUIFunctions.printf("Mouse Entered: %s", viewPoint.toString());
     }
 
     @Override
     public void mouseExited(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Exited: %s", point.toString());
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        //GUIFunctions.printf("Mouse Exited: %s", viewPoint.toString());
     }
 
     /* end MouseListener methods */
@@ -272,16 +279,17 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Dragged: %s", point.toString());
-        state.mouseDragged(point, model);
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        Point2D.Double worldPoint = getWorldPointFromViewPoint(viewPoint);
+        printRelativePoints("Mouse Dragged: W:(%d,%d), V:(%d,%d)", worldPoint, viewPoint);
+        state.mouseDragged(worldPoint, model);
     }
 
     @Override
     public void mouseMoved(MouseEvent e)
     {
-        Point2D.Double point = new Point2D.Double(e.getX(), e.getY());
-        //GUIFunctions.printf("Mouse Moved: %s", point.toString());
+        Point2D.Double viewPoint = new Point2D.Double(e.getX(), e.getY());
+        //GUIFunctions.printf("Mouse Moved: %s", viewPoint.toString());
     }
     /* end MouseMotionListener methods */
 
@@ -305,5 +313,25 @@ public class DrawingController implements CS355Controller, MouseListener, MouseM
     public void setState(DrawingState state)
     {
         this.state = state;
+    }
+
+    private double getScalingFactor()
+    {
+        return ((DrawingViewer) view).getScalingFactor();
+    }
+
+    private Point2D.Double getViewportUpperLeft()
+    {
+        return ((DrawingViewer) view).getViewportUpperLeft();
+    }
+
+    private void printRelativePoints(String message, Point2D.Double worldPoint, Point2D.Double viewPoint)
+    {
+        GUIFunctions.printf(message, (int) worldPoint.x, (int) worldPoint.y, (int) viewPoint.x, (int) viewPoint.y);
+    }
+
+    private Point2D.Double getWorldPointFromViewPoint(Point2D.Double viewPoint)
+    {
+        return Transform.getWorldPointFromViewPoint(viewPoint, new ViewportParameters(getViewportUpperLeft(), getScalingFactor()));
     }
 }

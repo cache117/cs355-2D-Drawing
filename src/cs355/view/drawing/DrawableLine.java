@@ -78,7 +78,7 @@ public class DrawableLine extends DrawableShape
         return new Point2D.Double(0,0);
     }
 
-    public Point2D.Double getEndHandleCenterPoint()
+    private Point2D.Double getEndHandleCenterPoint()
     {
         return Transform.getObjectPointFromWorldPoint(getEndPoint(), new ObjectParameters(getCenterPoint(), getRotation()));
     }

@@ -68,7 +68,7 @@ public class Square extends Shape
         if (getRotation() == NO_ROTATION)
             return ShapeUtilities.pointInBoundingBox(worldPoint, getCenter(), getSize(), getSize());
         else
-            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(center, rotation)), new Point2D.Double(0, 0), getSize(), getSize());
+            return ShapeUtilities.pointInBoundingBox(Transform.getObjectPointFromWorldPoint(worldPoint, new ObjectParameters(getCenter(), getRotation())), new Point2D.Double(0, 0), getSize(), getSize());
     }
 
     @Override

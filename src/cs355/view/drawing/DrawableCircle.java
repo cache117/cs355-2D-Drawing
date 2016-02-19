@@ -12,11 +12,19 @@ import java.awt.geom.Point2D;
  */
 public class DrawableCircle extends DrawableEllipse
 {
+    /**
+     * Creates the Drawable Circle from the given circle.
+     * @param circle the circle to initialize from.
+     */
     public DrawableCircle(Shape circle)
     {
         super(circle);
     }
 
+    /**
+     * Creates a basic DrawableCircle from a color.
+     * @param color the color to initialize from.
+     */
     public DrawableCircle(Color color)
     {
         super(color);
