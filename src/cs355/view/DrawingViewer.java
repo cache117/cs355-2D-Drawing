@@ -80,19 +80,23 @@ public class DrawingViewer implements ViewRefresher
     public void zoomInButtonHit()
     {
         if (scalingFactor < MAX_SCALING_FACTOR)
+        {
             scalingFactor *= 2.0;
-        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
-        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x + (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y + (VIEWPORT_SIZE / scalingFactor));
-        doZoom();
+            Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
+            viewportUpperLeft = new Point2D.Double(oldUpperLeft.x + (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y + (VIEWPORT_SIZE / scalingFactor));
+            doZoom();
+        }
     }
 
     public void zoomOutButtonHit()
     {
         if (scalingFactor > MIN_SCALING_FACTOR)
+        {
             scalingFactor /= 2.0;
-        Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
-        viewportUpperLeft = new Point2D.Double(oldUpperLeft.x - (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y - (VIEWPORT_SIZE / scalingFactor));
-        doZoom();
+            Point2D.Double oldUpperLeft = (Point2D.Double) viewportUpperLeft.clone();
+            viewportUpperLeft = new Point2D.Double(oldUpperLeft.x - (VIEWPORT_SIZE / scalingFactor), oldUpperLeft.y - (VIEWPORT_SIZE / scalingFactor));
+            doZoom();
+        }
     }
 
     public void hScrollbarChanged(int value)

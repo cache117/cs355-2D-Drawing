@@ -33,7 +33,7 @@ public abstract class DrawingState
     DrawingState(DrawingState currentState)
     {
         this();
-        this.drawableShape = buildDrawableShape(drawableShape.getColor());
+        this.drawableShape = buildDrawableShape(currentState.getColor());
     }
 
     public void lineButtonHit(DrawingController controller)
