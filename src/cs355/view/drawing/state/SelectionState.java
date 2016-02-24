@@ -14,7 +14,7 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 /**
- * Created by cstaheli on 1/23/2016.
+ * Allows for Selection of shapes and their modifications (rotation/dragging).
  */
 public class SelectionState extends DrawingState
 {
@@ -23,6 +23,9 @@ public class SelectionState extends DrawingState
     private int currentlySelectedShapeIndex;
     private boolean dragging;
 
+    /**
+     * Initializes a SelectionState.
+     */
     public SelectionState()
     {
         super();
@@ -96,6 +99,7 @@ public class SelectionState extends DrawingState
         }
     }
 
+    @SuppressWarnings("FeatureEnvy")
     private void checkForSelectedShape(Point2D.Double point, CS355Drawing model)
     {
         List<Shape> shapes = model.getShapes();
@@ -136,7 +140,7 @@ public class SelectionState extends DrawingState
     }
 
     @Override
-    protected void stateChanged(CS355Drawing model)
+    public void stateChanged(CS355Drawing model)
     {
         List<Shape> shapes = model.getShapes();
         for (Shape shape : shapes)
@@ -166,29 +170,27 @@ public class SelectionState extends DrawingState
     @Override
     public void moveShapeForward(CS355Drawing model)
     {
-        //TODO this needs to modify the index
-        model.moveForward(currentlySelectedShapeIndex);
+        model.moveForward(currentlySelectedShapeIndex--);
     }
 
     @Override
     public void moveShapeBackward(CS355Drawing model)
     {
-        //TODO this needs to modify the index
-        model.moveBackward(currentlySelectedShapeIndex);
+        model.moveBackward(currentlySelectedShapeIndex++);
     }
 
     @Override
     public void moveShapeToFront(CS355Drawing model)
     {
-        //TODO this needs to modify the index
         model.moveToFront(currentlySelectedShapeIndex);
+        currentlySelectedShapeIndex = 0;
     }
 
     @Override
     public void moveShapeToBack(CS355Drawing model)
     {
-        //TODO this needs to modify the index
         model.movetoBack(currentlySelectedShapeIndex);
+        currentlySelectedShapeIndex = model.getShapes().size() - 1;
     }
 
     private Shape getCurrentShapeFromModel(CS355Drawing model)
